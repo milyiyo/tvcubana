@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "997323646333",
+    "firebase_url": "https://cartelera-tvc.firebaseio.com",
+    "project_id": "cartelera-tvc",
+    "storage_bucket": "cartelera-tvc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:997323646333:android:7798d0da4ac8ea164cd814",
+        "android_client_info": {
+          "package_name": "cu.isla.cartelera_tvc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "997323646333-qt14p0m38t9bf0uksrou2hsvp71fa3ts.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmNZ2kcLG27xbRYkEq4EHeSst_V2VNXrc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "997323646333-qt14p0m38t9bf0uksrou2hsvp71fa3ts.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
