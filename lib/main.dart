@@ -1,18 +1,43 @@
 // Reference page: https://github.com/parse-community/Parse-SDK-Flutter
 
+import 'package:cartelera_tvc/TabBarDemo.dart';
+import 'package:cartelera_tvc/channel.dart';
+import 'package:cartelera_tvc/program.dart';
 import 'package:flutter/material.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
+
+import 'utils.dart';
+import 'dart:convert';
 
 const String PARSE_APP_ID = 'Fy0qjfqDevGKQPT5XaANnq9EbQ1EbP2OtiQzhwWV';
 const String PARSE_APP_URL = 'https://parseapi.back4app.com';
 const String MASTER_KEY = 'mPpFoKblASqkm362EhSv6Bw3AsXKTqJqLEBpmps6';
 const String LIVE_QUERY_URL = 'wss://qwertydomain.back4app.io';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  _setTargetPlatformForDesktop();
+  //_setTargetPlatformForDesktop();
+  testJsons();
+  var channels = await getChannels();
+  print(channels);
+  await clearCache();
 
-  runApp(MyApp());
+  runApp(MaterialApp(
+    title: 'Navigation Basics',
+    home: TabBarDemo(channels),
+  ));
+}
+
+void testJsons() {
+  var pi = new ProgramItem('description', 'descriptionLong', 'duration', 'date',
+      'dateStart', 'dateEnd', 'timeStart', 'timeEnd', 'title');
+  var p = new Program('date', [pi]);
+  var c = new Channel('id', 'name', 'logo', 'description');
+
+  var enc = Program.fromJson(json.decode(json.encode(p)));
+  var encChn = Channel.fromJson(json.decode(json.encode(c)));
+
+  print(encChn);
 }
 
 void _setTargetPlatformForDesktop() async {
@@ -35,32 +60,4 @@ void _setTargetPlatformForDesktop() async {
   await comment.save();
 
   print(apiResponse.count);
-}
-
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  String text = '';
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Center(
-          child: Text(text),
-        ),
-      ),
-    );
-  }
 }

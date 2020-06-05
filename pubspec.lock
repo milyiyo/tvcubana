@@ -108,7 +108,7 @@ packages:
     source: sdk
     version: "0.0.0"
   http:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: http
       url: "https://pub.flutter-io.cn"
@@ -206,7 +206,7 @@ packages:
     source: hosted
     version: "2.4.4+1"
   shared_preferences:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: shared_preferences
       url: "https://pub.flutter-io.cn"
