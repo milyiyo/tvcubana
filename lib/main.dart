@@ -17,10 +17,7 @@ const String LIVE_QUERY_URL = 'wss://qwertydomain.back4app.io';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   //_setTargetPlatformForDesktop();
-  testJsons();
   var channels = await getChannels();
-  print(channels);
-  await clearCache();
 
   runApp(MaterialApp(
     title: 'Navigation Basics',

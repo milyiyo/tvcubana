@@ -1,5 +1,3 @@
-import 'package:cartelera_tvc/program.dart';
-import 'package:cartelera_tvc/utils.dart';
 import 'package:flutter/material.dart';
 
 import 'channel.dart';

@@ -6,10 +6,8 @@ import 'program.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
-List<Channel> gChannels = null;
-
 Future<List<Program>> getProgram(Channel channel) async {
-  print('start:getProgram');
+  // print('start:getProgram');
   var date = new DateTime.now();
   var dateStr =
       '${date.year}-${date.month.toString().padLeft(2, "0")}-${date.day.toString().padLeft(2, "0")}';
@@ -23,7 +21,7 @@ Future<List<Program>> getProgram(Channel channel) async {
     programs = await retrieveProgramsFromCache(channel.id, dateStr);
   }
 
-  print('end:getProgram');
+  // print('end:getProgram');
   return programs;
 }
 
@@ -33,21 +31,21 @@ clearCache() async {
 }
 
 retrieveProgramsFromCache(String channelId, String dateStr) async {
-  print('start:retrieveProgramsFromCache');
+  // print('start:retrieveProgramsFromCache');
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var programsStr = prefs.getString('programs_${channelId}_$dateStr');
   var decodedStr = json.decode(programsStr);
   var programs = (decodedStr as List).map((e) => Program.fromJson(e)).toList();
-  print('end:retrieveProgramsFromCache');
+  // print('end:retrieveProgramsFromCache');
   return programs;
 }
 
 storeProgramsInCache(
     List<Program> programs, String channelId, String dateStr) async {
-  print('start:storeProgramsInCache');
+  // print('start:storeProgramsInCache');
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setString('programs_${channelId}_$dateStr', json.encode(programs));
-  print('end:storeProgramsInCache');
+  // print('end:storeProgramsInCache');
 }
 
 Future<List<Program>> getProgramFromURL(Channel channel) async {
@@ -89,7 +87,7 @@ Future<List<Program>> getProgramFromURL(Channel channel) async {
 }
 
 Future<List<Channel>> getChannelsFromURL() async {
-  print('start:getChannelsFromURL');
+  // print('start:getChannelsFromURL');
   var result = new List<Channel>();
   var url = 'http://eprog2.tvcdigital.cu/canales';
 
@@ -109,13 +107,12 @@ Future<List<Channel>> getChannelsFromURL() async {
   } else {
     print('Request failed with status: ${response.statusCode}.');
   }
-  gChannels = result;
-  print('end:getChannelsFromURL');
+  // print('end:getChannelsFromURL');
   return result;
 }
 
 Future<List<Channel>> getChannels() async {
-  print('start:getChannels');
+  // print('start:getChannels');
   var date = new DateTime.now();
   var dateStr =
       '${date.year}-${date.month.toString().padLeft(2, "0")}-${date.day.toString().padLeft(2, "0")}';
@@ -130,47 +127,47 @@ Future<List<Channel>> getChannels() async {
     channels = await retrieveChannelsFromCache();
   }
 
-  print('end:getChannels');
+  // print('end:getChannels');
   return channels;
 }
 
 Future<List<Channel>> retrieveChannelsFromCache() async {
-  print('start:retrieveChannelsFromCache');
+  // print('start:retrieveChannelsFromCache');
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var channelsStr = prefs.getString('channels');
   var decodedStr = json.decode(channelsStr);
   var channels = (decodedStr as List).map((e) => Channel.fromJson(e)).toList();
-  print('end:retrieveChannelsFromCache');
+  // print('end:retrieveChannelsFromCache');
   return channels;
 }
 
 Future<void> storeChannelsInCache(List<Channel> channels) async {
-  print('start:storeChannelsInCache');
+  // print('start:storeChannelsInCache');
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setString('channels', json.encode(channels));
-  print('end:storeChannelsInCache');
+  // print('end:storeChannelsInCache');
 }
 
 Future<void> storeDateInCache(String date) async {
-  print('start:storeDateInCache');
+  // print('start:storeDateInCache');
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setString('date', date);
-  print('end:storeDateInCache');
+  // print('end:storeDateInCache');
 }
 
 Future<bool> hasCacheFor(String dateStr) async {
-  print('start:hasCacheFor');
+  // print('start:hasCacheFor');
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var cacheDateStr = prefs.getString('date');
   if (cacheDateStr == null) {
     return false;
   }
-  print('end:hasCacheFor $cacheDateStr ${dateStr == cacheDateStr}');
+  // print('end:hasCacheFor $cacheDateStr ${dateStr == cacheDateStr}');
   return dateStr == cacheDateStr;
 }
 
 Future<bool> hasCacheForProgram(String key) async {
-  print('call:hasCacheForProgram');
+  // print('call:hasCacheForProgram');
   SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs.getKeys().contains(key);
 }

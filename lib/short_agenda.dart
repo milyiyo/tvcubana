@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'channel.dart';
 import 'program.dart';
@@ -16,8 +14,6 @@ class ShortAgenda extends StatefulWidget {
 }
 
 class _ShortAgendaState extends State<ShortAgenda> {
-  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-
   var storedData = {'date': '', 'channelCurrentProg': []};
 
   @override
@@ -28,54 +24,26 @@ class _ShortAgendaState extends State<ShortAgenda> {
     var todayStr =
         '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
 
-    _prefs.then((SharedPreferences prefs) {
-      var dictStr = prefs.getString('dict');
-      Map valueMap = storedData;
-      try {
-        valueMap = json.decode(dictStr);
-      } catch (e) {}
+    storedData['date'] = todayStr;
+    getChannels().then((channels) {
+      for (var i = 0; i < channels.length; i++) {
+        var channel = channels[i];
+        getProgram(channel).then((programs) {
+          var program = programs.firstWhere((p) => p.date == todayStr,
+              orElse: () => null);
+          if (program == null) return;
 
-      if (todayStr == valueMap['date'] && false) {
-        print('Loaded from sharedPreference');
-        storedData['date'] = valueMap['date'];
-        storedData['channelCurrentProg'] =
-            (valueMap['channelCurrentProg'] as List)
-                .map((e) => {
-                      'channel': Channel.fromJson(e['channel']),
-                      'programItem': ProgramItem.fromJson(e['programItem'])
-                    })
-                .toList();
+          program.channelId = channel.id;
+          var currentProgram = getTheCurrentProgram(program.programItems);
+          if (currentProgram == null) return;
 
-        setState(() {
-          storedData['channelCurrentProg'] = storedData['channelCurrentProg'];
-        });
-      } else {
-        print('Store in sharedPreference');
-        storedData['date'] = todayStr;
+          var res = {'channel': channel, 'programItem': currentProgram};
+          (storedData['channelCurrentProg'] as List).add(res);
 
-        for (var i = 0; i < gChannels.length; i++) {
-          getProgram(gChannels[i]).then((programs) {
-            var program = programs.firstWhere((p) => p.date == todayStr,
-                orElse: () => null);
-            if (program == null) return;
-
-            program.channelId = gChannels[i].id;
-            var currentProgram = getTheCurrentProgram(program.programItems);
-            if (currentProgram == null) return;
-
-            var res = {'channel': gChannels[i], 'programItem': currentProgram};
-            (storedData['channelCurrentProg'] as List).add(res);
-
-            setState(() {
-              storedData['channelCurrentProg'] =
-                  storedData['channelCurrentProg'];
-            });
-
-            _prefs.then((SharedPreferences prefs) {
-              return (prefs.setString('dict', json.encode(storedData)));
-            });
+          setState(() {
+            storedData['channelCurrentProg'] = storedData['channelCurrentProg'];
           });
-        }
+        });
       }
     });
   }

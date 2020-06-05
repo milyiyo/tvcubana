@@ -12,7 +12,6 @@ class Program {
         programItems = pjson['programItems'] == null ? [] :(json.decode(pjson['programItems']) as List).map((e) => ProgramItem.fromJson(e)).toList();
 
   Map<String, dynamic> toJson() {
-    print('Program toJson');
     return {
       'date': date,
       'programItems': json.encode(programItems.map((e) => e.toJson()).toList()),
