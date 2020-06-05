@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'channel.dart';
@@ -15,6 +17,7 @@ class ShortAgenda extends StatefulWidget {
 
 class _ShortAgendaState extends State<ShortAgenda> {
   var storedData = {'date': '', 'channelCurrentProg': []};
+  Timer timer;
 
   @override
   void initState() {
@@ -25,27 +28,42 @@ class _ShortAgendaState extends State<ShortAgenda> {
         '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
 
     storedData['date'] = todayStr;
-    getChannels().then((channels) {
-      for (var i = 0; i < channels.length; i++) {
-        var channel = channels[i];
-        getProgram(channel).then((programs) {
-          var program = programs.firstWhere((p) => p.date == todayStr,
-              orElse: () => null);
-          if (program == null) return;
+    getChannels().then((channels) => getAgendaData(channels, todayStr));
 
-          program.channelId = channel.id;
-          var currentProgram = getTheCurrentProgram(program.programItems);
-          if (currentProgram == null) return;
+    timer = new Timer.periodic(new Duration(seconds: 5), (Timer t) {
+      getChannels().then((channels) => getAgendaData(channels, todayStr));
+    });
+  }
 
-          var res = {'channel': channel, 'programItem': currentProgram};
-          (storedData['channelCurrentProg'] as List).add(res);
+  @override
+  void dispose() {
+    super.dispose();
+    timer.cancel();
+  }
 
+  getAgendaData(List<Channel> channels, String todayStr) {
+    storedData = {'date': '', 'channelCurrentProg': []};
+
+    for (var i = 0; i < channels.length; i++) {
+      var channel = channels[i];
+      getProgram(channel).then((programs) {
+        var program =
+            programs.firstWhere((p) => p.date == todayStr, orElse: () => null);
+        if (program == null) return;
+
+        program.channelId = channel.id;
+        var currentProgram = getTheCurrentProgram(program.programItems);
+        if (currentProgram == null) return;
+
+        var res = {'channel': channel, 'programItem': currentProgram};
+        (storedData['channelCurrentProg'] as List).add(res);
+
+        if (mounted)
           setState(() {
             storedData['channelCurrentProg'] = storedData['channelCurrentProg'];
           });
-        });
-      }
-    });
+      });
+    }
   }
 
   @override
