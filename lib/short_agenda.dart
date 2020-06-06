@@ -16,7 +16,11 @@ class ShortAgenda extends StatefulWidget {
 }
 
 class _ShortAgendaState extends State<ShortAgenda> {
-  var storedData = {'date': '', 'channelCurrentProg': []};
+  var storedData = {
+    'date': '',
+    'channelCurrentProg': [],
+    'channelNextProg': []
+  };
   Timer timer;
 
   @override
@@ -41,17 +45,19 @@ class _ShortAgendaState extends State<ShortAgenda> {
     timer.cancel();
   }
 
-  getImageForChannel(String channelName, double dimension ) {
-    // print(channelName);
+  getImageForChannel(String channelName, double dimension) {
     var images = getChannelImages();
     if (images.containsKey(channelName)) {
-      return Image.asset(images[channelName], height: dimension, width: dimension);
+      return Image.asset(images[channelName],
+          height: dimension, width: dimension);
     }
-    return Icon(Icons.access_alarm);
+    return Container(
+        margin: EdgeInsets.only(top: 10),
+        child: Icon(Icons.live_tv, size: 50, color: Colors.lightBlue[200]));
   }
 
   getAgendaData(List<Channel> channels, String todayStr) {
-    storedData = {'date': '', 'channelCurrentProg': []};
+    storedData = {'date': '', 'channelCurrentProg': [], 'channelNextProg': []};
 
     for (var i = 0; i < channels.length; i++) {
       var channel = channels[i];
@@ -64,47 +70,103 @@ class _ShortAgendaState extends State<ShortAgenda> {
         var currentProgram = getTheCurrentProgram(program.programItems);
         if (currentProgram[0] == null) return;
 
-        var res = {'channel': channel, 'programItem': currentProgram[0]};
-        (storedData['channelCurrentProg'] as List).add(res);
+        var curr = {'channel': channel, 'programItem': currentProgram[0]};
+        (storedData['channelCurrentProg'] as List).add(curr);
+
+        var next = {'channel': channel, 'programItem': currentProgram[1]};
+        (storedData['channelNextProg'] as List).add(next);
 
         if (mounted)
           setState(() {
             storedData['channelCurrentProg'] = storedData['channelCurrentProg'];
+            storedData['channelNextProg'] = storedData['channelNextProg'];
           });
       });
     }
   }
 
+  Widget headerText(String text) {
+    return Container(
+      color: Colors.lightBlue[200],
+      child: Container(
+        margin: new EdgeInsets.only(left: 20, top: 20, bottom: 10),
+        child: Align(
+          alignment: Alignment.topLeft,
+          child: Text(
+            text,
+            style: new TextStyle(fontSize: 28),
+            textAlign: TextAlign.left,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Iterable<Widget> getListOfItems(List<dynamic> collection) {
+    if (collection.length == 0) return [];
+
+    return collection.map((e) {
+      var channel = e['channel'] as Channel;
+      var programItem = e['programItem'] as ProgramItem;
+
+      return ListTile(
+        leading: getImageForChannel(channel.name, 50),
+        subtitle: Column(
+          children: [
+            Container(
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  '> ${channel.name}',
+                  style: new TextStyle(fontWeight: FontWeight.w600),
+                  textAlign: TextAlign.left,
+                ),
+              ),
+            ),
+            programItem == null
+                ? new Container()
+                : Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      programItem.descriptionLong.trim(),
+                      style: TextStyle(
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+          ],
+        ),
+        title: Text(
+          '${programItem?.title}',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 15,
+          ),
+        ),
+      );
+    }).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     var channelCurrentProg = storedData['channelCurrentProg'] as List;
+    var channelNextProg = storedData['channelNextProg'] as List;
     return ListView(children: [
       Column(
         children: [
-          Text('Ahora'),
+          headerText('Ahora'),
           Column(
-            children: channelCurrentProg.length == 0
-                ? []
-                : [
-                    ...channelCurrentProg.map((e) => ListTile(
-                      leading: getImageForChannel((e['channel'] as Channel).name, 50),
-                          subtitle: Text(
-                            (e['channel'] as Channel).name,
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
-                          ),
-                          title: Text(
-                            '${(e['programItem'] as ProgramItem)?.title}.',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
-                            ),
-                          ),
-                        ))
-                  ],
+            children: getListOfItems(channelCurrentProg),
           ),
-          Text('Después'),
+          Divider(
+            color: Colors.transparent,
+            height: 20,
+            thickness: 5,
+            indent: 10,
+            endIndent: 10,
+          ),
+          headerText('Después'),
+          Column(children: getListOfItems(channelNextProg)),
         ],
       ),
     ]);
