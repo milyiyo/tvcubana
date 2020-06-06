@@ -1,3 +1,4 @@
+import 'package:cartelera_tvc/MoviesList.dart';
 import 'package:cartelera_tvc/utils.dart';
 import 'package:flutter/material.dart';
 
@@ -32,7 +33,7 @@ class TabBarDemo extends StatelessWidget {
             bottom: TabBar(
               tabs: [
                 Tab(icon: Icon(Icons.access_time)),
-                Tab(icon: Icon(Icons.calendar_today)),
+                Tab(icon: Icon(Icons.movie_filter)),
                 Tab(icon: Icon(Icons.favorite)),
                 Tab(icon: Icon(Icons.view_agenda)),
               ],
@@ -77,7 +78,7 @@ class TabBarDemo extends StatelessWidget {
                     )
                     .toList(),
               ),
-              Icon(Icons.directions_transit),
+              MoviesList(),
               Icon(Icons.directions_bike),
               ShortAgenda(),
             ],
