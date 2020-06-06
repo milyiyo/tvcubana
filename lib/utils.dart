@@ -6,6 +6,31 @@ import 'program.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
+Map<String, String> getChannelImages() {
+  Map<String, String> images = new Map<String, String>();
+
+  images['Canal Caribe'] = 'assets/images/canal_caribe.jpg';
+  images['Telerebelde'] = 'assets/images/telerebelde.jpg';
+  images['Educativo'] = 'assets/images/educativo.jpg';
+  images['Educativo 2'] = 'assets/images/educativo2.jpg';
+  images['Multivisión'] = 'assets/images/canal_multivision.png';
+  images['Clave'] = 'assets/images/clave.jpg';
+  images['Cubavisión'] = 'assets/images/cubavision.png';
+  images['Cubavisión Plus'] = 'assets/images/cubavision.png';
+  images['Cubavisión Internacional'] =
+      'assets/images/cubavision_internacional.png';
+  images['Canal Habana '] = 'assets/images/canal_habana.jpg';
+  images['Artv'] = 'assets/images/artemisa_tv.jpg';
+  images['Telemayabeque'] = 'assets/images/tele_mayabeque.jpg';
+  images['Centrovisión Yayabo'] = 'assets/images/yayabo_tv.jpg';
+  images['Tele Pinar'] = 'assets/images/tele_pinar.jpg';
+  images['Telecubanacan'] = 'assets/images/tele_cubanacan.jpg';
+  images['Tele Cristal'] = 'assets/images/tele_cristal.jpg';
+  images['MiTV'] = 'assets/images/mitv.jpg';
+
+  return images;
+}
+
 Future<List<Program>> getProgram(Channel channel) async {
   // print('start:getProgram');
   var date = new DateTime.now();
@@ -172,7 +197,33 @@ Future<bool> hasCacheForProgram(String key) async {
   return prefs.getKeys().contains(key);
 }
 
-ProgramItem getTheCurrentProgram(List<ProgramItem> pitemsList) {
+List<ProgramItem> getTheCurrentProgram(List<ProgramItem> pitemsList) {
+  List<ProgramItem> result = [null, null];
+  for (var i = 0; i < pitemsList.length; i++) {
+    var pitem = pitemsList[i];
+
+    var now = new DateTime.now();
+    var dateStartProg = DateTime.parse(pitem.dateStart +
+        ' ' +
+        pitem.timeStart +
+        (pitem.timeStart.length == 8 ? '' : '0'));
+    var dateEndProg = DateTime.parse(pitem.dateEnd +
+        ' ' +
+        pitem.timeEnd +
+        (pitem.timeEnd.length == 8 ? '' : '0'));
+
+    if ((dateStartProg.isBefore(now) && dateEndProg.isAfter(now)) ||
+        dateStartProg == now ||
+        dateEndProg == now) {
+      result[0] = pitem;
+      if (i + 1 < pitemsList.length) result[1] = pitemsList[i + 1];
+      break;
+    }
+  }
+  return result;
+}
+
+ProgramItem getTheCurrentProgramOld(List<ProgramItem> pitemsList) {
   for (var pitem in pitemsList) {
     var now = new DateTime.now();
     var dateStartProg = DateTime.parse(pitem.dateStart +

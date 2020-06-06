@@ -1,3 +1,4 @@
+import 'package:cartelera_tvc/utils.dart';
 import 'package:flutter/material.dart';
 
 import 'channel.dart';
@@ -6,8 +7,20 @@ import 'short_agenda.dart';
 
 class TabBarDemo extends StatelessWidget {
   List<Channel> channels;
+  
 
-  TabBarDemo(this.channels);
+  TabBarDemo(this.channels) {
+    
+  }
+
+  getImageForChannel(String channelName) {
+    // print(channelName);
+    var images = getChannelImages();
+    if (images.containsKey(channelName)) {
+      return Image.asset(images[channelName], height: 100, width: 100);
+    }
+    return Icon(Icons.access_alarm);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,39 +47,34 @@ class TabBarDemo extends StatelessWidget {
                 crossAxisCount: 2,
                 // Generate 100 widgets that display their index in the List.
                 children: channels
-                    .map((e) => Card(
+                    .map(
+                      (e) => Card(
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ChannelProgram(e)),
+                            );
+                          },
                           child: Column(
-                            mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
                               ListTile(
-                                // leading: Icon(Icons.album),
                                 title: Text(
                                   e.name,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 24,
+                                    fontSize: 20,
                                   ),
                                 ),
                                 subtitle: Text('${e.description}.'),
                               ),
-                              ButtonBar(
-                                children: <Widget>[
-                                  FlatButton(
-                                    child: Text('Ver cartelera'),
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                ChannelProgram(e)),
-                                      );
-                                    },
-                                  ),
-                                ],
-                              ),
+                              getImageForChannel(e.name),
                             ],
                           ),
-                        ))
+                        ),
+                      ),
+                    )
                     .toList(),
               ),
               Icon(Icons.directions_transit),

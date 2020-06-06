@@ -18,6 +18,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   //_setTargetPlatformForDesktop();
   var channels = await getChannels();
+  // print(channels);
 
   runApp(MaterialApp(
     title: 'Navigation Basics',

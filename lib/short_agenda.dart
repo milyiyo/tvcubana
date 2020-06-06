@@ -41,6 +41,15 @@ class _ShortAgendaState extends State<ShortAgenda> {
     timer.cancel();
   }
 
+  getImageForChannel(String channelName, double dimension ) {
+    // print(channelName);
+    var images = getChannelImages();
+    if (images.containsKey(channelName)) {
+      return Image.asset(images[channelName], height: dimension, width: dimension);
+    }
+    return Icon(Icons.access_alarm);
+  }
+
   getAgendaData(List<Channel> channels, String todayStr) {
     storedData = {'date': '', 'channelCurrentProg': []};
 
@@ -53,9 +62,9 @@ class _ShortAgendaState extends State<ShortAgenda> {
 
         program.channelId = channel.id;
         var currentProgram = getTheCurrentProgram(program.programItems);
-        if (currentProgram == null) return;
+        if (currentProgram[0] == null) return;
 
-        var res = {'channel': channel, 'programItem': currentProgram};
+        var res = {'channel': channel, 'programItem': currentProgram[0]};
         (storedData['channelCurrentProg'] as List).add(res);
 
         if (mounted)
@@ -78,17 +87,18 @@ class _ShortAgendaState extends State<ShortAgenda> {
                 ? []
                 : [
                     ...channelCurrentProg.map((e) => ListTile(
+                      leading: getImageForChannel((e['channel'] as Channel).name, 50),
                           subtitle: Text(
                             (e['channel'] as Channel).name,
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 14,
                             ),
                           ),
                           title: Text(
                             '${(e['programItem'] as ProgramItem)?.title}.',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 20,
+                              fontSize: 15,
                             ),
                           ),
                         ))
