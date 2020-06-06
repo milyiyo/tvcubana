@@ -19,7 +19,7 @@ class TabBarDemo extends StatelessWidget {
     if (images.containsKey(channelName)) {
       return Image.asset(images[channelName], height: 100, width: 100);
     }
-    return Icon(Icons.access_alarm);
+    return Container(margin: EdgeInsets.only(top:10), child: Icon(Icons.live_tv, size: 50, color: Colors.lightBlue[200],));
   }
 
   @override
