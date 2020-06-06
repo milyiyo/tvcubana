@@ -19,7 +19,7 @@ Map<String, String> getChannelImages() {
   images['Cubavisión Plus'] = 'assets/images/cubavision.png';
   images['Cubavisión Internacional'] =
       'assets/images/cubavision_internacional.png';
-  images['Canal Habana '] = 'assets/images/canal_habana.jpg';
+  images['Canal Habana'] = 'assets/images/canal_habana.jpg';
   images['Artv'] = 'assets/images/artemisa_tv.jpg';
   images['Telemayabeque'] = 'assets/images/tele_mayabeque.jpg';
   images['Centrovisión Yayabo'] = 'assets/images/yayabo_tv.jpg';
