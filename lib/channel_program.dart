@@ -61,8 +61,8 @@ class _ChannelProgramState extends State<ChannelProgram> {
             children: programs
                 .map((p) => ListView(
                       controller: scrollController,
-                      children: (p == null)
-                          ? <Widget>[]
+                      children: (p == null || p.programItems.length == 0)
+                          ? [Image.asset('assets/images/noresult.jpg')]
                           : <Widget>[
                               ...p.programItems.map(
                                 (pitem) {
@@ -89,14 +89,14 @@ class _ChannelProgramState extends State<ChannelProgram> {
                                   );
                                 },
                               ),
-                              Center(
-                                child: RaisedButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text('Go back!'),
-                                ),
-                              ),
+                              // Center(
+                              //   child: RaisedButton(
+                              //     onPressed: () {
+                              //       Navigator.pop(context);
+                              //     },
+                              //     child: Text('Go back!'),
+                              //   ),
+                              // ),
                             ],
                     ))
                 .toList(),
