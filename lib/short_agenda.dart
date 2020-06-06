@@ -45,17 +45,6 @@ class _ShortAgendaState extends State<ShortAgenda> {
     timer.cancel();
   }
 
-  getImageForChannel(String channelName, double dimension) {
-    var images = getChannelImages();
-    if (images.containsKey(channelName)) {
-      return Image.asset(images[channelName],
-          height: dimension, width: dimension);
-    }
-    return Container(
-        margin: EdgeInsets.only(top: 10),
-        child: Icon(Icons.live_tv, size: 50, color: Colors.lightBlue[200]));
-  }
-
   getAgendaData(List<Channel> channels, String todayStr) {
     storedData = {'date': '', 'channelCurrentProg': [], 'channelNextProg': []};
 

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'dart:convert';
@@ -30,6 +31,17 @@ Map<String, String> getChannelImages() {
 
   return images;
 }
+
+getImageForChannel(String channelName, double dimension) {
+    var images = getChannelImages();
+    if (images.containsKey(channelName)) {
+      return Image.asset(images[channelName],
+          height: dimension, width: dimension);
+    }
+    return Container(
+        margin: EdgeInsets.only(top: 10),
+        child: Icon(Icons.live_tv, size: 50, color: Colors.lightBlue[200]));
+  }
 
 Future<List<Program>> getProgram(Channel channel) async {
   // print('start:getProgram');
