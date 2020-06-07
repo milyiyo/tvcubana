@@ -1,7 +1,9 @@
 import 'package:cartelera_tvc/program.dart';
 import 'package:cartelera_tvc/utils.dart';
 import 'package:flutter/material.dart';
-
+import 'dart:convert' as convert;
+import 'package:http/http.dart' as http;
+import 'package:chips_choice/chips_choice.dart';
 import 'channel.dart';
 
 class MoviesList extends StatefulWidget {
@@ -11,19 +13,45 @@ class MoviesList extends StatefulWidget {
 
 class _MoviesListState extends State<MoviesList> {
   var movies = new List();
+  var isLoading = false;
 
   @override
   void initState() {
     super.initState();
 
+    isLoading = true;
     getChannels().then((channels) {
       channels.forEach((channel) {
         getProgram(channel).then((programs) {
           programs.forEach((program) {
-            program.programItems.forEach((programItem) {
+            program.programItems.forEach((programItem) async {
               if (isToday(programItem) && isMovie(programItem) && mounted) {
+                RegExp exp1 = new RegExp(r"Título\soriginal:\s([A-Za-z :]*)");
+                RegExp exp2 = new RegExp(r"([A-Za-z ]*)\s\(Titulo\sOriginal\)");
+                RegExpMatch match =
+                    exp1.firstMatch(programItem.descriptionLong);
+                if (match == null) {
+                  match = exp2.firstMatch(programItem.descriptionLong);
+                }
+                if (match == null &&
+                    programItem.title.startsWith('Filmecito:')) {}
+
+                Map<String, String> omdb = {};
+                if (match != null) {
+                  var title = match.group(1);
+                  print(title);
+                  var url = 'http://www.omdbapi.com/?apikey=c161b4d4&t=$title';
+                  var response = await http.get(url);
+                  if (response.statusCode == 200) {
+                    var jsonResponse = convert.jsonDecode(response.body);
+                    omdb['poster'] = jsonResponse['Poster'];
+                    omdb['imdbRating'] = jsonResponse['imdbRating'];
+                    print('$title $omdb');
+                  }
+                }
+
                 setState(() {
-                  movies.add([channel, programItem]);
+                  movies.add([channel, programItem, omdb]);
                   movies.sort((a, b) {
                     var programA = (a[1] as ProgramItem);
                     var date0 = DateTime.parse(
@@ -35,6 +63,7 @@ class _MoviesListState extends State<MoviesList> {
 
                     return date0.compareTo(date1);
                   });
+                  isLoading = false;
                 });
               }
             });
@@ -44,35 +73,75 @@ class _MoviesListState extends State<MoviesList> {
     });
   }
 
+  List<String> tags = [];
+  List<String> options = ['Películas', 'Series'];
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: ListView(
-        children: [
-          ...movies.map((e) {
-            var channel = (e[0] as Channel);
-            var programItem = (e[1] as ProgramItem);
-            return ListTile(
-              leading: getImageForChannel(channel.name, 50),
-              title: Text(programItem.title),
-              subtitle: Column(
-                children: [
-                  Container(
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Text('${programItem.timeStart} ${channel.name}'),
-                    ),
-                  ),
-                  Container(
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Text('${programItem.descriptionLong}'),
-                    ),
-                  ),
-                ],
+      child: Column(
+        children: <Widget>[
+          Container(
+            child: ChipsChoice<String>.multiple(
+              value: tags,
+              options: ChipsChoiceOption.listFrom<String, String>(
+                source: options,
+                value: (i, v) => v,
+                label: (i, v) => v,
               ),
-            );
-          })
+              onChanged: (val) => setState(() => tags = val),
+            ),
+          ),
+          Expanded(
+            child: ListView(
+              shrinkWrap: true,
+              children: isLoading
+                  ? [
+                      Center(
+                          child: Padding(
+                        padding: const EdgeInsets.only(top: 100.0),
+                        child: CircularProgressIndicator(),
+                      ))
+                    ]
+                  : [
+                      ...movies.map((e) {
+                        var channel = (e[0] as Channel);
+                        var programItem = (e[1] as ProgramItem);
+                        var omdb = (e[2] as Map<String, String>);
+                        return ListTile(
+                          leading: getImageForChannel(channel.name, 50),
+                          title: Text(programItem.title),
+                          subtitle: Column(
+                            children: [
+                              omdb['poster'] == null
+                                  ? new Container()
+                                  : Image.network(
+                                      omdb['poster'],
+                                      height: 300,
+                                    ),
+                              omdb['imdbRating'] == null
+                                  ? new Container()
+                                  : Text(omdb['imdbRating']),
+                              Container(
+                                child: Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text(
+                                      '${programItem.timeStart} ${channel.name}'),
+                                ),
+                              ),
+                              Container(
+                                child: Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text('${programItem.descriptionLong}'),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      })
+                    ],
+            ),
+          ),
         ],
       ),
     );
