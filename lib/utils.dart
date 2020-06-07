@@ -33,18 +33,18 @@ Map<String, String> getChannelImages() {
 }
 
 getImageForChannel(String channelName, double dimension) {
-    var images = getChannelImages();
-    if (images.containsKey(channelName)) {
-      return Image.asset(images[channelName],
-          height: dimension, width: dimension);
-    }
-    return Container(
-        margin: EdgeInsets.only(top: 10),
-        child: Icon(Icons.live_tv, size: 50, color: Colors.lightBlue[200]));
+  var images = getChannelImages();
+  if (images.containsKey(channelName)) {
+    return Image.asset(images[channelName],
+        height: dimension, width: dimension);
   }
+  return Container(
+      margin: EdgeInsets.only(top: 10),
+      child: Icon(Icons.live_tv, size: 50, color: Colors.lightBlue[200]));
+}
 
 Future<List<Program>> getProgram(Channel channel) async {
-  // print('start:getProgram');
+  print('start:getProgram');
   var date = new DateTime.now();
   var dateStr =
       '${date.year}-${date.month.toString().padLeft(2, "0")}-${date.day.toString().padLeft(2, "0")}';
@@ -68,7 +68,7 @@ clearCache() async {
 }
 
 retrieveProgramsFromCache(String channelId, String dateStr) async {
-  // print('start:retrieveProgramsFromCache');
+  print('start:retrieveProgramsFromCache');
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var programsStr = prefs.getString('programs_${channelId}_$dateStr');
   var decodedStr = json.decode(programsStr);
@@ -77,9 +77,8 @@ retrieveProgramsFromCache(String channelId, String dateStr) async {
   return programs;
 }
 
-storeProgramsInCache(
-    List<Program> programs, String channelId, String dateStr) async {
-  // print('start:storeProgramsInCache');
+storeProgramsInCache(List<Program> programs, String channelId, String dateStr) async {
+  print('start:storeProgramsInCache');
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setString('programs_${channelId}_$dateStr', json.encode(programs));
   // print('end:storeProgramsInCache');
@@ -124,7 +123,7 @@ Future<List<Program>> getProgramFromURL(Channel channel) async {
 }
 
 Future<List<Channel>> getChannelsFromURL() async {
-  // print('start:getChannelsFromURL');
+  print('start:getChannelsFromURL');
   var result = new List<Channel>();
   var url = 'http://eprog2.tvcdigital.cu/canales';
 
@@ -149,7 +148,7 @@ Future<List<Channel>> getChannelsFromURL() async {
 }
 
 Future<List<Channel>> getChannels() async {
-  // print('start:getChannels');
+  print('start:getChannels');
   var date = new DateTime.now();
   var dateStr =
       '${date.year}-${date.month.toString().padLeft(2, "0")}-${date.day.toString().padLeft(2, "0")}';
@@ -169,7 +168,7 @@ Future<List<Channel>> getChannels() async {
 }
 
 Future<List<Channel>> retrieveChannelsFromCache() async {
-  // print('start:retrieveChannelsFromCache');
+  print('start:retrieveChannelsFromCache');
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var channelsStr = prefs.getString('channels');
   var decodedStr = json.decode(channelsStr);
@@ -179,24 +178,25 @@ Future<List<Channel>> retrieveChannelsFromCache() async {
 }
 
 Future<void> storeChannelsInCache(List<Channel> channels) async {
-  // print('start:storeChannelsInCache');
+  print('start:storeChannelsInCache');
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setString('channels', json.encode(channels));
   // print('end:storeChannelsInCache');
 }
 
 Future<void> storeDateInCache(String date) async {
-  // print('start:storeDateInCache');
+  print('start:storeDateInCache');
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setString('date', date);
   // print('end:storeDateInCache');
 }
 
 Future<bool> hasCacheFor(String dateStr) async {
-  // print('start:hasCacheFor');
+  print('start:hasCacheFor');
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var cacheDateStr = prefs.getString('date');
-  if (cacheDateStr == null) {
+  var cacheChannelStr = prefs.getString('channels');
+  if (cacheDateStr == null && cacheChannelStr != null) {
     return false;
   }
   // print('end:hasCacheFor $cacheDateStr ${dateStr == cacheDateStr}');

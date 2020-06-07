@@ -22,6 +22,7 @@ class _ShortAgendaState extends State<ShortAgenda> {
     'channelNextProg': []
   };
   Timer timer;
+  var isLoading = false;
 
   @override
   void initState() {
@@ -32,6 +33,7 @@ class _ShortAgendaState extends State<ShortAgenda> {
         '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
 
     storedData['date'] = todayStr;
+    isLoading = true;
     getChannels().then((channels) => getAgendaData(channels, todayStr));
 
     timer = new Timer.periodic(new Duration(seconds: 5), (Timer t) {
@@ -69,6 +71,7 @@ class _ShortAgendaState extends State<ShortAgenda> {
           setState(() {
             storedData['channelCurrentProg'] = storedData['channelCurrentProg'];
             storedData['channelNextProg'] = storedData['channelNextProg'];
+            isLoading = false;
           });
       });
     }
@@ -142,21 +145,29 @@ class _ShortAgendaState extends State<ShortAgenda> {
     var channelNextProg = storedData['channelNextProg'] as List;
     return ListView(children: [
       Column(
-        children: [
-          headerText('Ahora'),
-          Column(
-            children: getListOfItems(channelCurrentProg),
-          ),
-          Divider(
-            color: Colors.transparent,
-            height: 20,
-            thickness: 5,
-            indent: 10,
-            endIndent: 10,
-          ),
-          headerText('Después'),
-          Column(children: getListOfItems(channelNextProg)),
-        ],
+        children: isLoading
+            ? [
+              Center(
+                    child: Padding(
+                  padding: const EdgeInsets.only(top: 100.0),
+                  child: CircularProgressIndicator(),
+                ))
+            ]
+            : [
+                headerText('Ahora'),
+                Column(
+                  children: getListOfItems(channelCurrentProg),
+                ),
+                Divider(
+                  color: Colors.transparent,
+                  height: 20,
+                  thickness: 5,
+                  indent: 10,
+                  endIndent: 10,
+                ),
+                headerText('Después'),
+                Column(children: getListOfItems(channelNextProg)),
+              ],
       ),
     ]);
   }
