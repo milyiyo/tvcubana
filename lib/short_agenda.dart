@@ -64,8 +64,10 @@ class _ShortAgendaState extends State<ShortAgenda> {
         var curr = {'channel': channel, 'programItem': currentProgram[0]};
         (storedData['channelCurrentProg'] as List).add(curr);
 
-        var next = {'channel': channel, 'programItem': currentProgram[1]};
-        (storedData['channelNextProg'] as List).add(next);
+        if (currentProgram[1] != null) {
+          var next = {'channel': channel, 'programItem': currentProgram[1]};
+          (storedData['channelNextProg'] as List).add(next);
+        }
 
         if (mounted)
           setState(() {
@@ -109,7 +111,7 @@ class _ShortAgendaState extends State<ShortAgenda> {
               child: Align(
                 alignment: Alignment.topLeft,
                 child: Text(
-                  '> ${channel.name}',
+                  '${programItem.timeStart.substring(0,5)} > ${channel.name}',
                   style: new TextStyle(fontWeight: FontWeight.w600),
                   textAlign: TextAlign.left,
                 ),
@@ -147,12 +149,12 @@ class _ShortAgendaState extends State<ShortAgenda> {
       Column(
         children: isLoading
             ? [
-              Center(
+                Center(
                     child: Padding(
                   padding: const EdgeInsets.only(top: 100.0),
                   child: CircularProgressIndicator(),
                 ))
-            ]
+              ]
             : [
                 headerText('Ahora'),
                 Column(
