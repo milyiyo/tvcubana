@@ -18,14 +18,25 @@ class _MoviesListState extends State<MoviesList> {
   @override
   void initState() {
     super.initState();
-
     isLoading = true;
+    chargeList();
+  }
+
+  void chargeList() {
+    movies.clear();
     getChannels().then((channels) {
       channels.forEach((channel) {
         getProgram(channel).then((programs) {
           programs.forEach((program) {
             program.programItems.forEach((programItem) async {
-              if (isToday(programItem) && isMovie(programItem) && mounted) {
+              if (isToday(programItem) &&
+                  mounted &&
+                  ((isMovie(programItem) && moviesIsSeleted()) ||
+                      (isSerie(programItem) && seriesIsSeleted()) ||
+                      (isMusic(programItem) && musicIsSeleted()) ||
+                      (isSports(programItem) && sportsIsSeleted()) ||
+                      (isNews(programItem) && newsIsSeleted()) ||
+                      (isDocumental(programItem) && documentalsIsSeleted()))) {
                 RegExp exp1 = new RegExp(r"Título\soriginal:\s([A-Za-z :]*)");
                 RegExp exp2 = new RegExp(r"([A-Za-z ]*)\s\(Titulo\sOriginal\)");
                 RegExpMatch match =
@@ -37,18 +48,18 @@ class _MoviesListState extends State<MoviesList> {
                     programItem.title.startsWith('Filmecito:')) {}
 
                 Map<String, String> omdb = {};
-                if (match != null) {
-                  var title = match.group(1);
-                  print(title);
-                  var url = 'http://www.omdbapi.com/?apikey=c161b4d4&t=$title';
-                  var response = await http.get(url);
-                  if (response.statusCode == 200) {
-                    var jsonResponse = convert.jsonDecode(response.body);
-                    omdb['poster'] = jsonResponse['Poster'];
-                    omdb['imdbRating'] = jsonResponse['imdbRating'];
-                    print('$title $omdb');
-                  }
-                }
+                // if (match != null) {
+                //   var title = match.group(1);
+                //   print(title);
+                //   var url = 'http://www.omdbapi.com/?apikey=c161b4d4&t=$title';
+                //   var response = await http.get(url);
+                //   if (response.statusCode == 200) {
+                //     var jsonResponse = convert.jsonDecode(response.body);
+                //     omdb['poster'] = jsonResponse['Poster'];
+                //     omdb['imdbRating'] = jsonResponse['imdbRating'];
+                //     print('$title $omdb');
+                //   }
+                // }
 
                 setState(() {
                   movies.add([channel, programItem, omdb]);
@@ -73,8 +84,46 @@ class _MoviesListState extends State<MoviesList> {
     });
   }
 
-  List<String> tags = [];
-  List<String> options = ['Películas', 'Series'];
+  List<String> tags = [
+    'Películas',
+    'Series',
+    'Noticias',
+    'Deporte',
+    'Documentales',
+    'Musicales'
+  ];
+  List<String> options = [
+    'Películas',
+    'Series',
+    'Noticias',
+    'Deporte',
+    'Documentales',
+    'Musicales'
+  ];
+
+  bool moviesIsSeleted() {
+    return this.tags.contains('Películas');
+  }
+
+  bool seriesIsSeleted() {
+    return this.tags.contains('Series');
+  }
+
+  bool newsIsSeleted() {
+    return this.tags.contains('Noticias');
+  }
+
+  bool sportsIsSeleted() {
+    return this.tags.contains('Deporte');
+  }
+
+  bool documentalsIsSeleted() {
+    return this.tags.contains('Documentales');
+  }
+
+  bool musicIsSeleted() {
+    return this.tags.contains('Musicales');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +138,10 @@ class _MoviesListState extends State<MoviesList> {
                 value: (i, v) => v,
                 label: (i, v) => v,
               ),
-              onChanged: (val) => setState(() => tags = val),
+              onChanged: (val) => setState(() {
+                tags = val;
+                chargeList();
+              }),
             ),
           ),
           Expanded(
@@ -156,9 +208,44 @@ bool isToday(ProgramItem programItem) {
 }
 
 bool isMovie(ProgramItem programItem) {
-  var keywords = ['pelicula', 'película', 'filme', 'cine', 'serie'];
-  var longText =
-      '${programItem.title.toLowerCase()} ${programItem.descriptionLong.toLowerCase()}';
+  var text = programItem.classification.join(',');
+  return text.contains('Cine') ||
+      text.contains('Pelicula') ||
+      text.contains('filme');
+}
 
-  return keywords.any((element) => longText.contains(element));
+bool isSerie(ProgramItem programItem) {
+  var text = programItem.classification.join(',');
+  return text.contains('Seri');
+}
+
+bool isNews(ProgramItem programItem) {
+  var text = programItem.classification.join(',');
+  return text.contains('Notici') ||
+      text.contains('Telediario') ||
+      text.contains('Revista') ||
+      text.contains('Debate') ||
+      text.contains('Boletin') ||
+      text.contains('Opinión') ||
+      text.contains('Entrevista') ||
+      text.contains('Reportaje')||
+      text.contains('Emision especial')||
+      text.contains('Informativo');
+}
+
+bool isDocumental(ProgramItem programItem) {
+  var text = programItem.classification.join(',');
+  return text.contains('Documental');
+}
+
+bool isSports(ProgramItem programItem) {
+  var text = programItem.classification.join(',');
+  return text.contains('Deport');
+}
+
+bool isMusic(ProgramItem programItem) {
+  var text = programItem.classification.join(',');
+  return text.contains('Musical') ||
+      text.contains('Concierto') ||
+      text.contains('Espectaculo');
 }

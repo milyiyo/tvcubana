@@ -29,20 +29,22 @@ class ProgramItem {
   String timeEnd;
   String timeStart;
   String title;
+  List<String> classification = [];
 
   ProgramItem(this.description, this.descriptionLong, this.duration, this.date,
-      this.dateStart, this.dateEnd, this.timeStart, this.timeEnd, this.title);
+      this.dateStart, this.dateEnd, this.timeStart, this.timeEnd, this.title, this.classification);
 
-  ProgramItem.fromJson(Map<String, dynamic> json)
-      : description = json['description'],
-        descriptionLong = json['descriptionLong'],
-        duration = json['duration'],
-        date = json['date'],
-        dateStart = json['dateStart'],
-        dateEnd = json['dateEnd'],
-        timeStart = json['timeStart'],
-        timeEnd = json['timeEnd'],
-        title = json['title'];
+  ProgramItem.fromJson(Map<String, dynamic> pjson)
+      : description = pjson['description'],
+        descriptionLong = pjson['descriptionLong'],
+        duration = pjson['duration'],
+        date = pjson['date'],
+        dateStart = pjson['dateStart'],
+        dateEnd = pjson['dateEnd'],
+        timeStart = pjson['timeStart'],
+        timeEnd = pjson['timeEnd'],
+        title = pjson['title'],
+        classification = (pjson['classification'] as List).map((e) => e.toString()).toList();
 
   Map<String, dynamic> toJson() => {
         'description': description,
@@ -54,5 +56,6 @@ class ProgramItem {
         'timeStart': timeStart,
         'timeEnd': timeEnd,
         'title': title,
+        'classification': classification
       };
 }

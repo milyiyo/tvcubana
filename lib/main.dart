@@ -28,7 +28,7 @@ void main() async {
 
 void testJsons() {
   var pi = new ProgramItem('description', 'descriptionLong', 'duration', 'date',
-      'dateStart', 'dateEnd', 'timeStart', 'timeEnd', 'title');
+      'dateStart', 'dateEnd', 'timeStart', 'timeEnd', 'title', []);
   var p = new Program('date', [pi]);
   var c = new Channel('id', 'name', 'logo', 'description');
 

@@ -101,18 +101,18 @@ Future<List<Program>> getProgramFromURL(Channel channel) async {
     var response = await http.get(url);
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
-
-      for (var json in jsonResponse) {
+      for (var pjson in jsonResponse) {
         result.add(new ProgramItem(
-            json['descripcion'],
-            json['descripcion_ampliada'],
-            json['duracion'],
-            json['fecha'],
-            json['fecha_inicial'],
-            json['fecha_final'],
-            json['hora_inicio'],
-            json['hora_fin'],
-            json['titulo']));
+            pjson['descripcion'],
+            pjson['descripcion_ampliada'],
+            pjson['duracion'],
+            pjson['fecha'],
+            pjson['fecha_inicial'],
+            pjson['fecha_final'],
+            pjson['hora_inicio'],
+            pjson['hora_fin'],
+            pjson['titulo'],
+            (pjson['clasific'] as List).map((e) => e['clasificacion'].toString().trim()).toList()));
       }
     } else {
       print('Request failed with status: ${response.statusCode}.');
