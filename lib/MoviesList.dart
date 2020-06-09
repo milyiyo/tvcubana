@@ -37,29 +37,39 @@ class _MoviesListState extends State<MoviesList> {
                       (isSports(programItem) && sportsIsSeleted()) ||
                       (isNews(programItem) && newsIsSeleted()) ||
                       (isDocumental(programItem) && documentalsIsSeleted()))) {
-                RegExp exp1 = new RegExp(r"Título\soriginal:\s([A-Za-z :]*)");
-                RegExp exp2 = new RegExp(r"([A-Za-z ]*)\s\(Titulo\sOriginal\)");
-                RegExpMatch match =
-                    exp1.firstMatch(programItem.descriptionLong);
-                if (match == null) {
-                  match = exp2.firstMatch(programItem.descriptionLong);
+                String searchString = programItem.descriptionLong.toLowerCase();
+
+                var exps = [
+                  new RegExp(r"título\soriginal:\s([a-z :]*)"),
+                  new RegExp(r"([a-z ]*)\s\(titulo\soriginal\)"),
+                  new RegExp(r"título\sen\sidioma\soriginal:\s([a-z :]*)"),
+                  new RegExp(r"título\soriginal\s([a-z :]*)")
+                ];
+                RegExpMatch match;
+
+                for (var exp in exps) {
+                  match = exp.firstMatch(searchString);
+                  if (match != null) break;
                 }
+
                 if (match == null &&
                     programItem.title.startsWith('Filmecito:')) {}
 
                 Map<String, String> omdb = {};
-                // if (match != null) {
-                //   var title = match.group(1);
-                //   print(title);
-                //   var url = 'http://www.omdbapi.com/?apikey=c161b4d4&t=$title';
-                //   var response = await http.get(url);
-                //   if (response.statusCode == 200) {
-                //     var jsonResponse = convert.jsonDecode(response.body);
-                //     omdb['poster'] = jsonResponse['Poster'];
-                //     omdb['imdbRating'] = jsonResponse['imdbRating'];
-                //     print('$title $omdb');
-                //   }
-                // }
+                if (match != null) {
+                  var title = match.group(1);
+                  print(title);
+                  var url = 'http://www.omdbapi.com/?apikey=c161b4d4&t=$title';
+                  try {
+                    var response = await http.get(url);
+                    if (response.statusCode == 200) {
+                      var jsonResponse = convert.jsonDecode(response.body);
+                      omdb['poster'] = jsonResponse['Poster'];
+                      omdb['imdbRating'] = jsonResponse['imdbRating'];
+                      print('$title $omdb');
+                    }
+                  } catch (e) {}
+                }
 
                 setState(() {
                   movies.add([channel, programItem, omdb]);
@@ -86,11 +96,11 @@ class _MoviesListState extends State<MoviesList> {
 
   List<String> tags = [
     'Películas',
-    'Series',
-    'Noticias',
-    'Deporte',
-    'Documentales',
-    'Musicales'
+    // 'Series',
+    // 'Noticias',
+    // 'Deporte',
+    // 'Documentales',
+    // 'Musicales'
   ];
   List<String> options = [
     'Películas',
@@ -167,13 +177,20 @@ class _MoviesListState extends State<MoviesList> {
                             children: [
                               omdb['poster'] == null
                                   ? new Container()
-                                  : Image.network(
-                                      omdb['poster'],
-                                      height: 300,
-                                    ),
+                                  : buildImageRounded(omdb['poster']),
                               omdb['imdbRating'] == null
                                   ? new Container()
-                                  : Text(omdb['imdbRating']),
+                                  : Row(
+                                      children: [
+                                        Spacer(),
+                                        Icon(
+                                          Icons.star,
+                                          color: Colors.yellow[600],
+                                        ),
+                                        Text('${omdb['imdbRating']} / 10'),
+                                        Spacer(),
+                                      ],
+                                    ),
                               Container(
                                 child: Align(
                                   alignment: Alignment.topLeft,
@@ -195,6 +212,22 @@ class _MoviesListState extends State<MoviesList> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Container buildImageRounded(String url) {
+    return Container(
+      margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 20.0, bottom: 20.0),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(50.0)),
+      child: Center(
+        child: Hero(
+          tag: 'tag',
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10.0),
+            child: Image.network(url, height: 300),
+          ),
+        ),
       ),
     );
   }
@@ -228,8 +261,8 @@ bool isNews(ProgramItem programItem) {
       text.contains('Boletin') ||
       text.contains('Opinión') ||
       text.contains('Entrevista') ||
-      text.contains('Reportaje')||
-      text.contains('Emision especial')||
+      text.contains('Reportaje') ||
+      text.contains('Emision especial') ||
       text.contains('Informativo');
 }
 
