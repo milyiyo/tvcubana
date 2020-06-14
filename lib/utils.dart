@@ -49,7 +49,7 @@ Map<String, String> getChannelImages() {
   images ['TV Avileña'] = 'assets/images/tvavilena-icon.png';
   images['TV Camaguey'] = 'assets/images/tvcamaguey-icon.png';
   images['TV Yumuri'] = 'assets/images/tvyumuri-icon.png';
-  images['Telerebelde Plus'] = 'assets/images/telerebelde-icon.jpg';
+  images['Telerebelde Plus'] = 'assets/images/telerebeldePlus-icon.png';
   images['Russia Today'] = 'assets/images/rusiaToday-icon.png';
 
   return images;
