@@ -48,14 +48,13 @@ class _TabBarDemoState extends State<TabBarDemo> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: DefaultTabController(
-        length: 4,
+        length: 3,
         child: Scaffold(
           appBar: AppBar(
             bottom: TabBar(
               tabs: [
                 Tab(icon: Icon(Icons.access_time)),
-                Tab(icon: Icon(Icons.movie_filter)),
-                Tab(icon: Icon(Icons.favorite)),
+                Tab(icon: Icon(Icons.category)),
                 Tab(icon: Icon(Icons.view_agenda)),
               ],
             ),
@@ -107,7 +106,6 @@ class _TabBarDemoState extends State<TabBarDemo> {
                           .toList(),
                     ),
               MoviesList(),
-              Icon(Icons.directions_bike),
               ShortAgenda(),
             ],
           ),
