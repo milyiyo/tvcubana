@@ -17,7 +17,7 @@ Map<String, String> getChannelImages() {
   images['Multivisión'] = 'assets/images/canal_multivision.png';
   images['Clave'] = 'assets/images/clave.jpg';
   images['Cubavisión'] = 'assets/images/cubavision.png';
-  images['Cubavisión Plus'] = 'assets/images/cubavision.png';
+  images['Cubavisión Plus'] = 'assets/images/cubavision_plus.png';
   images['Cubavisión Internacional'] =
       'assets/images/cubavision_internacional.png';
   images['Canal Habana'] = 'assets/images/canal_habana.jpg';
