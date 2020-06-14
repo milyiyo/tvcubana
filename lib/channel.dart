@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:cartelera_tvc/program.dart';
+import 'package:tvcubana/program.dart';
 
 class Channel {
   String id;

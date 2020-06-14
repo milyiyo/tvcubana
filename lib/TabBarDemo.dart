@@ -1,5 +1,5 @@
-import 'package:cartelera_tvc/MoviesList.dart';
-import 'package:cartelera_tvc/utils.dart';
+import 'package:tvcubana/MoviesList.dart';
+import 'package:tvcubana/utils.dart';
 import 'package:flutter/material.dart';
 
 import 'channel.dart';
@@ -59,7 +59,7 @@ class _TabBarDemoState extends State<TabBarDemo> {
                 Tab(icon: Icon(Icons.view_agenda)),
               ],
             ),
-            title: Text('Cartelera TVC'),
+            title: Text('TVCubana'),
           ),
           body: TabBarView(
             children: [

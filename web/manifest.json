@@ -1,6 +1,6 @@
 {
-    "name": "cartelera_tvc",
-    "short_name": "cartelera_tvc",
+    "name": "tvcubana",
+    "short_name": "tvcubana",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

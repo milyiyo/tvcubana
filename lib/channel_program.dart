@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:cartelera_tvc/program.dart';
+import 'package:tvcubana/program.dart';
 import 'package:flutter/material.dart';
 import 'channel.dart';
 import 'utils.dart';
@@ -67,7 +67,8 @@ class _ChannelProgramState extends State<ChannelProgram> {
                               ...p.programItems.map(
                                 (pitem) {
                                   var shouldPositionTheScroll =
-                                      getTheCurrentProgram(p.programItems) ==
+                                      getTheCurrentProgram(p.programItems)
+                                              .first ==
                                           pitem;
                                   return Card(
                                     key: shouldPositionTheScroll

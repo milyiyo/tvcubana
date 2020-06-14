@@ -43,12 +43,16 @@ getImageForChannel(String channelName, double dimension) {
       child: Icon(Icons.live_tv, size: 50, color: Colors.lightBlue[200]));
 }
 
+String getStrDate(DateTime date){
+  return '${date.year}-${date.month.toString().padLeft(2, "0")}-${date.day.toString().padLeft(2, "0")}';
+}
+
 Future<List<Program>> getProgram(Channel channel) async {
   // print('start:getProgram');
   var date = new DateTime.now();
-  var dateStr =
-      '${date.year}-${date.month.toString().padLeft(2, "0")}-${date.day.toString().padLeft(2, "0")}';
   var programs = new List<Program>();
+  var lastDayOfWeek = date.add(new Duration(days: 7 - date.weekday)); 
+  var dateStr = getStrDate(lastDayOfWeek);
 
   bool hasCache = await hasCacheForProgram('programs_${channel.id}_$dateStr');
   if (!hasCache) {
@@ -92,10 +96,9 @@ Future<List<Program>> getProgramFromURL(Channel channel) async {
   var programs = List<Program>();
   for (var i = 0; i < 7; i++) {
     var date = firstDayOfWeek.add(new Duration(days: i));
-    var dateStr =
-        '${date.year}-${date.month.toString().padLeft(2, "0")}-${date.day.toString().padLeft(2, "0")}';
+    var dateStr = getStrDate(date);
 
-    var url = 'http://eprog2.tvcdigital.cu/programacion/${channel.id}/${date}';
+    var url = 'http://eprog2.tvcdigital.cu/programacion/${channel.id}/$date';
     var result = List<ProgramItem>();
     // Await the http get response, then decode the json-formatted response.
     var response = await http.get(url);
@@ -150,15 +153,16 @@ Future<List<Channel>> getChannelsFromURL() async {
 Future<List<Channel>> getChannels() async {
   // print('start:getChannels');
   var date = new DateTime.now();
-  var dateStr =
-      '${date.year}-${date.month.toString().padLeft(2, "0")}-${date.day.toString().padLeft(2, "0")}';
+  var lastDayOfWeek = date.add(new Duration(days: 7 - date.weekday)); 
+  print(lastDayOfWeek);
+  var dateStr = getStrDate(date);
   var channels = new List<Channel>();
 
   bool hasCache = await hasCacheFor(dateStr);
   if (!hasCache) {
     channels = await getChannelsFromURL();
     storeChannelsInCache(channels);
-    storeDateInCache(dateStr);
+    storeDateInCache(getStrDate(lastDayOfWeek));
   } else {
     channels = await retrieveChannelsFromCache();
   }
@@ -196,10 +200,14 @@ Future<bool> hasCacheFor(String dateStr) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var cacheDateStr = prefs.getString('date');
   var cacheChannelStr = prefs.getString('channels');
+  if (cacheDateStr == null) {
+    return false;
+  }
   if (cacheDateStr == null && cacheChannelStr != null) {
     return false;
   }
   // print('end:hasCacheFor $cacheDateStr ${dateStr == cacheDateStr}');
+  return DateTime.parse(dateStr).isBefore(DateTime.parse(cacheDateStr));
   return dateStr == cacheDateStr;
 }
 

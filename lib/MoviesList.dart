@@ -1,5 +1,5 @@
-import 'package:cartelera_tvc/program.dart';
-import 'package:cartelera_tvc/utils.dart';
+import 'package:tvcubana/program.dart';
+import 'package:tvcubana/utils.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;

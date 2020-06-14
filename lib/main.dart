@@ -1,12 +1,10 @@
 // Reference page: https://github.com/parse-community/Parse-SDK-Flutter
 
-import 'package:cartelera_tvc/TabBarDemo.dart';
-import 'package:cartelera_tvc/channel.dart';
-import 'package:cartelera_tvc/program.dart';
+import 'package:tvcubana/TabBarDemo.dart';
+import 'package:tvcubana/channel.dart';
 import 'package:flutter/material.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
-import 'utils.dart';
 import 'dart:convert';
 
 const String PARSE_APP_ID = 'Fy0qjfqDevGKQPT5XaANnq9EbQ1EbP2OtiQzhwWV';
@@ -27,12 +25,12 @@ void main() async {
 }
 
 void testJsons() {
-  var pi = new ProgramItem('description', 'descriptionLong', 'duration', 'date',
-      'dateStart', 'dateEnd', 'timeStart', 'timeEnd', 'title', []);
-  var p = new Program('date', [pi]);
+  // var pi = new ProgramItem('description', 'descriptionLong', 'duration', 'date',
+      // 'dateStart', 'dateEnd', 'timeStart', 'timeEnd', 'title', []);
+  // var p = new Program('date', [pi]);
   var c = new Channel('id', 'name', 'logo', 'description');
 
-  var enc = Program.fromJson(json.decode(json.encode(p)));
+  // var enc = Program.fromJson(json.decode(json.encode(p)));
   var encChn = Channel.fromJson(json.decode(json.encode(c)));
 
   print(encChn);
