@@ -51,10 +51,18 @@ class _MoviesListState extends State<MoviesList> {
                   new RegExp(r"cine\sde\saventuras:\s([a-z :]*)"),
                   new RegExp(r"algo\spara\srecordar:\s([a-z :]*)"),
                   new RegExp(r"t[i-í]tulo\soriginal:\s([a-z :]*)"),
-                  new RegExp(r"([a-z ]*)\s\(titulo\soriginal\)"),
-                  new RegExp(r"([a-z -]*).\stítulo\soriginal"),
+                  new RegExp(r"\w*t[i-í]tulo\soriginal:\s([a-z -\s1]*)"),
+                  new RegExp(r"&\s[a-z -ó2]*\st[i-í]tulo\soriginal:([a-z :\s0-9]*)"),
+
+                  new RegExp(r"([a-z -ó2]*)\s\(titulo\soriginal\)"),
+                  new RegExp(r"([a-z -ó2]*).\stítulo\soriginal"),
+                  new RegExp(r"([a-z -ó2]*)\stítulo\soriginal"),
+
+                  new RegExp(r"&\s([a-z -ó2]*)\stítulo\soriginal"),
                   new RegExp(r"título\sen\sidioma\soriginal:\s([a-z :]*)"),
                   new RegExp(r"([a-z -]*).\stítulo\sen\sespañol"),
+                  new RegExp(r"titulo\soriginal\s:\s([a-z :\s]*)"),
+                  new RegExp(r"&[a-z áéíóú]*\(([a-z ]*)\)"),
                 ];
                 RegExpMatch match;
 
