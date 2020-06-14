@@ -7,27 +7,50 @@ import 'program.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
+var sportNames = [
+  r"\b[e-é]isbol",
+  r"\f[u-ú]tbol",
+  'basket',
+  'baloncesto',
+  'boxeo',
+  r'\nataci[o-ó]n',
+  'judo',
+  'taekwondo',
+  'lucha'
+];
+
 Map<String, String> getChannelImages() {
   Map<String, String> images = new Map<String, String>();
 
   images['Canal Caribe'] = 'assets/images/canal_caribe.jpg';
-  images['Telerebelde'] = 'assets/images/telerebelde.jpg';
-  images['Educativo'] = 'assets/images/educativo.jpg';
-  images['Educativo 2'] = 'assets/images/educativo2.jpg';
-  images['Multivisión'] = 'assets/images/canal_multivision.png';
+  images['Telerebelde'] = 'assets/images/telerebelde-icon.jpg';
+  images['Educativo'] = 'assets/images/educativo-icon.png';
+  images['Educativo 2'] = 'assets/images/educativo2-icon.png';
+  images['Multivisión'] = 'assets/images/multivision-icon.png';
   images['Clave'] = 'assets/images/clave.jpg';
-  images['Cubavisión'] = 'assets/images/cubavision.png';
+  images['Cubavisión'] = 'assets/images/cubavision-icon.png';
   images['Cubavisión Plus'] = 'assets/images/cubavision_plus.png';
   images['Cubavisión Internacional'] =
       'assets/images/cubavision_internacional.png';
-  images['Canal Habana'] = 'assets/images/canal_habana.jpg';
+  images['Canal Habana'] = 'assets/images/canalHabana-icon.png';
   images['Artv'] = 'assets/images/artemisa_tv.jpg';
   images['Telemayabeque'] = 'assets/images/tele_mayabeque.jpg';
   images['Centrovisión Yayabo'] = 'assets/images/yayabo_tv.jpg';
-  images['Tele Pinar'] = 'assets/images/tele_pinar.jpg';
+  images['Tele Pinar'] = 'assets/images/telepinar-icon.jpg';
   images['Telecubanacan'] = 'assets/images/tele_cubanacan.jpg';
   images['Tele Cristal'] = 'assets/images/tele_cristal.jpg';
   images['MiTV'] = 'assets/images/mitv.jpg';
+  images['Islavisión'] = 'assets/images/islavision-icon.png';
+  images ['CNC Tv'] = 'assets/images/cnctv-icon.jpeg';
+  images ['Perlavisión'] = 'assets/images/perlavision-icon.png';
+  images ['Solvisión'] = 'assets/images/solvision-icon.jpeg';
+  images ['Tele Turquino'] = 'assets/images/tvSantiago-icon.jpg';
+  images ['Tunasvisión'] = 'assets/images/tunasvision-icon.png';
+  images ['TV Avileña'] = 'assets/images/tvavilena-icon.png';
+  images['TV Camaguey'] = 'assets/images/tvcamaguey-icon.png';
+  images['TV Yumuri'] = 'assets/images/tvyumuri-icon.png';
+  images['Telerebelde Plus'] = 'assets/images/telerebelde-icon.jpg';
+  images['Russia Today'] = 'assets/images/rusiaToday-icon.png';
 
   return images;
 }
@@ -43,7 +66,7 @@ getImageForChannel(String channelName, double dimension) {
       child: Icon(Icons.live_tv, size: 50, color: Colors.lightBlue[200]));
 }
 
-String getStrDate(DateTime date){
+String getStrDate(DateTime date) {
   return '${date.year}-${date.month.toString().padLeft(2, "0")}-${date.day.toString().padLeft(2, "0")}';
 }
 
@@ -51,7 +74,7 @@ Future<List<Program>> getProgram(Channel channel) async {
   // print('start:getProgram');
   var date = new DateTime.now();
   var programs = new List<Program>();
-  var lastDayOfWeek = date.add(new Duration(days: 7 - date.weekday)); 
+  var lastDayOfWeek = date.add(new Duration(days: 7 - date.weekday));
   var dateStr = getStrDate(lastDayOfWeek);
 
   bool hasCache = await hasCacheForProgram('programs_${channel.id}_$dateStr');
@@ -81,7 +104,8 @@ retrieveProgramsFromCache(String channelId, String dateStr) async {
   return programs;
 }
 
-storeProgramsInCache(List<Program> programs, String channelId, String dateStr) async {
+storeProgramsInCache(
+    List<Program> programs, String channelId, String dateStr) async {
   // print('start:storeProgramsInCache');
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setString('programs_${channelId}_$dateStr', json.encode(programs));
@@ -115,7 +139,9 @@ Future<List<Program>> getProgramFromURL(Channel channel) async {
             pjson['hora_inicio'],
             pjson['hora_fin'],
             pjson['titulo'],
-            (pjson['clasific'] as List).map((e) => e['clasificacion'].toString().trim()).toList()));
+            (pjson['clasific'] as List)
+                .map((e) => e['clasificacion'].toString().trim())
+                .toList()));
       }
     } else {
       print('Request failed with status: ${response.statusCode}.');
@@ -153,7 +179,7 @@ Future<List<Channel>> getChannelsFromURL() async {
 Future<List<Channel>> getChannels() async {
   // print('start:getChannels');
   var date = new DateTime.now();
-  var lastDayOfWeek = date.add(new Duration(days: 7 - date.weekday)); 
+  var lastDayOfWeek = date.add(new Duration(days: 7 - date.weekday));
   print(lastDayOfWeek);
   var dateStr = getStrDate(date);
   var channels = new List<Channel>();

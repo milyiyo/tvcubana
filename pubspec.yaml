@@ -56,23 +56,33 @@ flutter:
   assets:
     - assets/images/canal_caribe.jpg
     - assets/images/artemisa_tv.jpg
-    - assets/images/canal_multivision.png
-    - assets/images/cubavision.png
+    - assets/images/multivision-icon.png
+    - assets/images/cubavision-icon.png
     - assets/images/cubavision_plus.png
-    - assets/images/canal_habana.jpg
+    - assets/images/canalHabana-icon.png
     - assets/images/cubavision_internacional.png
     - assets/images/clave.jpg
-    - assets/images/educativo.jpg
-    - assets/images/educativo2.jpg
-    - assets/images/telerebelde.jpg
+    - assets/images/educativo-icon.png
+    - assets/images/educativo2-icon.png
+    - assets/images/telerebelde-icon.jpg
     - assets/images/tele_mayabeque.jpg
     - assets/images/yayabo_tv.jpg
-    - assets/images/tele_pinar.jpg
+    - assets/images/telepinar-icon.jpg
     - assets/images/tele_cubanacan.jpg
     - assets/images/tele_cristal.jpg
     - assets/images/mitv.jpg
     - assets/images/noresult.jpg
     - assets/images/icon.png
+    - assets/images/tvavilena-icon.png
+    - assets/images/cnctv-icon.jpeg
+    - assets/images/islavision-icon.png
+    - assets/images/perlavision-icon.png
+    - assets/images/rusiaToday-icon.png
+    - assets/images/solvision-icon.jpeg
+    - assets/images/tunasvision-icon.png
+    - assets/images/tvSantiago-icon.jpg
+    - assets/images/tvyumuri-icon.png
+    - assets/images/tvcamaguey-icon.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
