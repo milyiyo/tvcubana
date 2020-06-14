@@ -79,7 +79,7 @@ class _ChannelProgramState extends State<ChannelProgram> {
                                           ? Colors.lightBlue[50]
                                           : Colors.transparent,
                                       child: ListTile(
-                                        leading: FlutterLogo(size: 72.0),
+                                        leading: getImageForCategory(pitem),
                                         title: Text(pitem.title),
                                         subtitle: Text(pitem.timeStart +
                                             ' ' +
@@ -106,4 +106,54 @@ class _ChannelProgramState extends State<ChannelProgram> {
       ),
     );
   }
+}
+
+getImageForCategory(ProgramItem pitem) {
+  var categories = pitem.classification.join(' ').toLowerCase();
+
+  var getIcon =
+      (IconData icon) => Icon(icon, size: 50, color: Colors.lightBlue[400]);
+
+  if (categories.contains('concierto') ||
+      categories.contains('musi') ||
+      categories.contains('recital') ||
+      categories.contains('espectaculo')) return getIcon(Icons.music_video);
+
+  if (categories.contains('animacion') ||
+      categories.contains('telefilme') ||
+      categories.contains('pelicula') ||
+      categories.contains('cine')) return getIcon(Icons.movie);
+
+  if (categories.contains('documenta')) return getIcon(Icons.videocam);
+  if (categories.contains('depor')) return getIcon(Icons.accessibility);
+
+  if (categories.contains('formacion general') ||
+      categories.contains('teleclase')) return getIcon(Icons.school);
+
+  if (categories.contains('reportaje') ||
+      categories.contains('concurso') ||
+      categories.contains('disertacion especializada') ||
+      categories.contains('opinión') ||
+      categories.contains('resumen informativo') ||
+      categories.contains('promoción de la programación') ||
+      categories.contains('telediario') ||
+      categories.contains('noticiero') ||
+      categories.contains('emision') ||
+      categories.contains('revista') ||
+      categories.contains('debate') ||
+      categories.contains('capsula') ||
+      categories.contains('boletin') ||
+      categories.contains('spot')) return getIcon(Icons.mic);
+
+  if (categories.contains('utilitario'))
+    return Icon(Icons.home, size: 50, color: Colors.lightBlue[400]);
+
+  if (categories.contains('seriado') || categories.contains('serie'))
+    return getIcon(Icons.subscriptions);
+
+  if (categories.contains('novela')) return getIcon(Icons.dvr);
+
+  print(categories);
+
+  return FlutterLogo(size: 72.0);
 }
