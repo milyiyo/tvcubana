@@ -24,9 +24,9 @@ class _MoviesListState extends State<MoviesList> {
 
   void chargeList() {
     movies.clear();
-    getChannels().then((channels) {
+    getChannels(false).then((channels) {
       channels.forEach((channel) {
-        getProgram(channel).then((programs) {
+        getProgram(channel, false).then((programs) {
           programs.forEach((program) {
             program.programItems.forEach((programItem) async {
               if (isToday(programItem) &&

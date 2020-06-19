@@ -20,11 +20,28 @@ class _TabBarDemoState extends State<TabBarDemo> {
     super.initState();
 
     isLoading = true;
-    getChannels().then((value) {
+    getChannels(false).then((value) {
       if (mounted) {
         channels = value;
         setState(() {
           isLoading = false;
+        });
+      }
+    });
+  }
+
+  void reloadData() {
+    setState(() {
+      isLoading = true;
+    });
+
+    getChannels(true).then((channels) {
+      for (var i = 0; i < channels.length; i++) {
+        getProgram(channels[i], true).then((programs) {
+          if (i == channels.length - 1)
+            setState(() {
+              isLoading = false;
+            });
         });
       }
     });
@@ -59,6 +76,12 @@ class _TabBarDemoState extends State<TabBarDemo> {
               ],
             ),
             title: Text('TVCubana'),
+          ),
+          floatingActionButton: FloatingActionButton.extended(
+            onPressed: reloadData,
+            label: Text('Recargar'),
+            icon: Icon(Icons.refresh),
+            backgroundColor: Colors.blue,
           ),
           body: TabBarView(
             children: [

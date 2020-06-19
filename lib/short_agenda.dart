@@ -34,10 +34,10 @@ class _ShortAgendaState extends State<ShortAgenda> {
 
     storedData['date'] = todayStr;
     isLoading = true;
-    getChannels().then((channels) => getAgendaData(channels, todayStr));
+    getChannels(false).then((channels) => getAgendaData(channels, todayStr));
 
     timer = new Timer.periodic(new Duration(seconds: 5), (Timer t) {
-      getChannels().then((channels) => getAgendaData(channels, todayStr));
+      getChannels(false).then((channels) => getAgendaData(channels, todayStr));
     });
   }
 
@@ -52,7 +52,7 @@ class _ShortAgendaState extends State<ShortAgenda> {
 
     for (var i = 0; i < channels.length; i++) {
       var channel = channels[i];
-      getProgram(channel).then((programs) {
+      getProgram(channel, false).then((programs) {
         var program =
             programs.firstWhere((p) => p.date == todayStr, orElse: () => null);
         if (program == null) return;

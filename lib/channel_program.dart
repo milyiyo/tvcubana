@@ -25,7 +25,13 @@ class _ChannelProgramState extends State<ChannelProgram> {
   void initState() {
     super.initState();
 
-    getProgram(widget.channel).then((value) => setState(() {
+    getProgram(widget.channel, false).then((value) => setState(() {
+          programs = value;
+        }));
+  }
+
+  void reloadData() {
+    getProgram(widget.channel, true).then((value) => setState(() {
           programs = value;
         }));
   }
@@ -47,6 +53,12 @@ class _ChannelProgramState extends State<ChannelProgram> {
     });
 
     return Scaffold(
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: reloadData,
+        label: Text('Recargar'),
+        icon: Icon(Icons.refresh),
+        backgroundColor: Colors.blue,
+      ),
       body: DefaultTabController(
         length: datesOfWeek.length,
         initialIndex: new DateTime.now().weekday - 1,

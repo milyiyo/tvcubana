@@ -70,7 +70,7 @@ String getStrDate(DateTime date) {
   return '${date.year}-${date.month.toString().padLeft(2, "0")}-${date.day.toString().padLeft(2, "0")}';
 }
 
-Future<List<Program>> getProgram(Channel channel) async {
+Future<List<Program>> getProgram(Channel channel, bool forceUpdate) async {
   // print('start:getProgram');
   var date = new DateTime.now();
   var programs = new List<Program>();
@@ -78,7 +78,7 @@ Future<List<Program>> getProgram(Channel channel) async {
   var dateStr = getStrDate(lastDayOfWeek);
 
   bool hasCache = await hasCacheForProgram('programs_${channel.id}_$dateStr');
-  if (!hasCache) {
+  if (!hasCache || forceUpdate) {
     programs = await getProgramFromURL(channel);
     storeProgramsInCache(programs, channel.id, dateStr);
   } else {
@@ -176,7 +176,7 @@ Future<List<Channel>> getChannelsFromURL() async {
   return result;
 }
 
-Future<List<Channel>> getChannels() async {
+Future<List<Channel>> getChannels(bool forceUpdate) async {
   // print('start:getChannels');
   var date = new DateTime.now();
   var lastDayOfWeek = date.add(new Duration(days: 7 - date.weekday));
@@ -185,7 +185,7 @@ Future<List<Channel>> getChannels() async {
   var channels = new List<Channel>();
 
   bool hasCache = await hasCacheFor(dateStr);
-  if (!hasCache) {
+  if (!hasCache || forceUpdate) {
     channels = await getChannelsFromURL();
     storeChannelsInCache(channels);
     storeDateInCache(getStrDate(lastDayOfWeek));
