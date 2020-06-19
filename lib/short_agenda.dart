@@ -81,14 +81,14 @@ class _ShortAgendaState extends State<ShortAgenda> {
 
   Widget headerText(String text) {
     return Container(
-      color: Colors.lightBlue[200],
+      color: Colors.blue,
       child: Container(
         margin: new EdgeInsets.only(left: 20, top: 20, bottom: 10),
         child: Align(
           alignment: Alignment.topLeft,
           child: Text(
             text,
-            style: new TextStyle(fontSize: 28),
+            style: new TextStyle(fontSize: 28, color: Colors.white),
             textAlign: TextAlign.left,
           ),
         ),
