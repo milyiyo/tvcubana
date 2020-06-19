@@ -70,49 +70,40 @@ class _ChannelProgramState extends State<ChannelProgram> {
             title: Text("Cartelera ${widget.channel.name}"),
           ),
           body: TabBarView(
-            children: programs
-                .map((p) => ListView(
-                      controller: scrollController,
-                      children: (p == null || p.programItems.length == 0)
-                          ? [Image.asset('assets/images/noresult.jpg')]
-                          : <Widget>[
-                              ...p.programItems.map(
-                                (pitem) {
-                                  var shouldPositionTheScroll =
-                                      getTheCurrentProgram(p.programItems)
-                                              .first ==
-                                          pitem;
-                                  return Card(
-                                    key: shouldPositionTheScroll
-                                        ? stickyKey
-                                        : null,
-                                    child: Ink(
-                                      color: shouldPositionTheScroll
-                                          ? Colors.lightBlue[50]
-                                          : Colors.transparent,
-                                      child: ListTile(
-                                        leading: getImageForCategory(pitem),
-                                        title: Text(pitem.title),
-                                        subtitle: Text(pitem.timeStart +
-                                            ' ' +
-                                            pitem.descriptionLong),
-                                        isThreeLine: true,
-                                      ),
-                                    ),
-                                  );
-                                },
+            children: programs.map((p) {
+              var currentProgram = (p == null || p.programItems.length == 0)
+                  ? null
+                  : getTheCurrentProgram(p.programItems).first;
+              return ListView(
+                controller: scrollController,
+                children: (p == null || p.programItems.length == 0)
+                    ? [Image.asset('assets/images/noresult.jpg')]
+                    : <Widget>[
+                        ...p.programItems.map(
+                          (pitem) {
+                            var shouldPositionTheScroll =
+                                currentProgram == pitem;
+                            return Card(
+                              key: shouldPositionTheScroll ? stickyKey : null,
+                              child: Ink(
+                                color: shouldPositionTheScroll
+                                    ? Colors.lightBlue[50]
+                                    : Colors.transparent,
+                                child: ListTile(
+                                  leading: getImageForCategory(pitem),
+                                  title: Text(pitem.title),
+                                  subtitle: Text(pitem.timeStart +
+                                      ' ' +
+                                      pitem.descriptionLong),
+                                  isThreeLine: true,
+                                ),
                               ),
-                              // Center(
-                              //   child: RaisedButton(
-                              //     onPressed: () {
-                              //       Navigator.pop(context);
-                              //     },
-                              //     child: Text('Go back!'),
-                              //   ),
-                              // ),
-                            ],
-                    ))
-                .toList(),
+                            );
+                          },
+                        ),
+                      ],
+              );
+            }).toList(),
           ),
         ),
       ),
@@ -123,44 +114,50 @@ class _ChannelProgramState extends State<ChannelProgram> {
 getImageForCategory(ProgramItem pitem) {
   var categories = pitem.classification.join(' ').toLowerCase();
 
+  var containsAnyOf = (String text, List<String> words) {
+    for (var word in words) {
+      if (text.contains(word)) return true;
+    }
+    return false;
+  };
+
   var getIcon =
       (IconData icon) => Icon(icon, size: 50, color: Colors.lightBlue[400]);
 
-  if (categories.contains('concierto') ||
-      categories.contains('musi') ||
-      categories.contains('recital') ||
-      categories.contains('espectaculo')) return getIcon(Icons.music_video);
+  if (containsAnyOf(
+      categories, ['concierto', 'musi', 'recital', 'espectaculo']))
+    return getIcon(Icons.music_video);
 
-  if (categories.contains('animacion') ||
-      categories.contains('telefilme') ||
-      categories.contains('pelicula') ||
-      categories.contains('cine')) return getIcon(Icons.movie);
+  if (containsAnyOf(categories, ['animacion', 'telefilme', 'pelicula', 'cine']))
+    return getIcon(Icons.movie);
 
   if (categories.contains('documenta')) return getIcon(Icons.videocam);
   if (categories.contains('depor')) return getIcon(Icons.accessibility);
 
-  if (categories.contains('formacion general') ||
-      categories.contains('teleclase')) return getIcon(Icons.school);
+  if (containsAnyOf(categories, ['formacion general', 'teleclase']))
+    return getIcon(Icons.school);
 
-  if (categories.contains('reportaje') ||
-      categories.contains('concurso') ||
-      categories.contains('disertacion especializada') ||
-      categories.contains('opinión') ||
-      categories.contains('resumen informativo') ||
-      categories.contains('promoción de la programación') ||
-      categories.contains('telediario') ||
-      categories.contains('noticiero') ||
-      categories.contains('emision') ||
-      categories.contains('revista') ||
-      categories.contains('debate') ||
-      categories.contains('capsula') ||
-      categories.contains('boletin') ||
-      categories.contains('spot')) return getIcon(Icons.mic);
+  if (containsAnyOf(categories, [
+    'reportaje',
+    'concurso',
+    'disertacion especializada',
+    'opinión',
+    'resumen informativo',
+    'promoción de la programación',
+    'telediario',
+    'noticiero',
+    'emision',
+    'revista',
+    'debate',
+    'capsula',
+    'boletin',
+    'spot'
+  ])) return getIcon(Icons.mic);
 
   if (categories.contains('utilitario'))
     return Icon(Icons.home, size: 50, color: Colors.lightBlue[400]);
 
-  if (categories.contains('seriado') || categories.contains('serie'))
+  if (containsAnyOf(categories, ['seriado', 'serie']))
     return getIcon(Icons.subscriptions);
 
   if (categories.contains('novela')) return getIcon(Icons.dvr);
