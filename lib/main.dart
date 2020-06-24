@@ -1,11 +1,12 @@
 // Reference page: https://github.com/parse-community/Parse-SDK-Flutter
 
-import 'package:tvcubana/TabBarDemo.dart';
-import 'package:tvcubana/channel.dart';
 import 'package:flutter/material.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
 import 'dart:convert';
+
+import 'models/Channel.dart';
+import 'widgets/TabBarDemo.dart';
 
 const String PARSE_APP_ID = 'Fy0qjfqDevGKQPT5XaANnq9EbQ1EbP2OtiQzhwWV';
 const String PARSE_APP_URL = 'https://parseapi.back4app.com';

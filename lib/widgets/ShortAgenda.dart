@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:tvcubana/models/Channel.dart';
+import 'package:tvcubana/models/ProgramItem.dart';
 
-import 'channel.dart';
-import 'program.dart';
-import 'utils.dart';
+import '../utils.dart';
 
 class ShortAgenda extends StatefulWidget {
   const ShortAgenda({

@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:tvcubana/program.dart';
+import 'package:tvcubana/models/Channel.dart';
+import 'package:tvcubana/models/Program.dart';
+import 'package:tvcubana/models/ProgramItem.dart';
+
+import '../utils.dart';
 import 'package:flutter/material.dart';
-import 'channel.dart';
-import 'utils.dart';
 
 class ChannelProgram extends StatefulWidget {
   Channel channel;

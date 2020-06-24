@@ -1,10 +1,10 @@
-import 'package:tvcubana/program.dart';
+import 'package:tvcubana/models/Channel.dart';
+import 'package:tvcubana/models/ProgramItem.dart';
 import 'package:tvcubana/utils.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 import 'package:chips_choice/chips_choice.dart';
-import 'channel.dart';
 
 class MoviesList extends StatefulWidget {
   @override

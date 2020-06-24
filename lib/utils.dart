@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'dart:convert';
-import 'channel.dart';
-import 'program.dart';
+import 'models/Channel.dart';
+import 'models/Program.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
+
+import 'models/ProgramItem.dart';
 
 var sportNames = [
   r"\b[e-é]isbol",

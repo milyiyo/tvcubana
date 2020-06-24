@@ -1,10 +1,10 @@
-import 'package:tvcubana/MoviesList.dart';
+import 'package:tvcubana/models/Channel.dart';
 import 'package:tvcubana/utils.dart';
 import 'package:flutter/material.dart';
 
-import 'channel.dart';
-import 'channel_program.dart';
-import 'short_agenda.dart';
+import 'ChannelProgram.dart';
+import 'MoviesList.dart';
+import 'ShortAgenda.dart';
 
 class TabBarDemo extends StatefulWidget {
   @override
