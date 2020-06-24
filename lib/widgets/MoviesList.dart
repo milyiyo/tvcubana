@@ -6,6 +6,8 @@ import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 import 'package:chips_choice/chips_choice.dart';
 
+import 'ProgramItemCard.dart';
+
 class MoviesList extends StatefulWidget {
   @override
   _MoviesListState createState() => _MoviesListState();
@@ -51,13 +53,13 @@ class _MoviesListState extends State<MoviesList> {
                   new RegExp(r"cine\sde\saventuras:\s([a-z :]*)"),
                   new RegExp(r"algo\spara\srecordar:\s([a-z :]*)"),
                   new RegExp(r"t[i-í]tulo\soriginal:\s([a-z :]*)"),
+                  new RegExp(r"t[i-í]tulo\soriginal\s([a-z :]*)"),
                   new RegExp(r"\w*t[i-í]tulo\soriginal:\s([a-z -\s1]*)"),
-                  new RegExp(r"&\s[a-z -ó2]*\st[i-í]tulo\soriginal:([a-z :\s0-9]*)"),
-
+                  new RegExp(
+                      r"&\s[a-z -ó2]*\st[i-í]tulo\soriginal:([a-z :\s0-9]*)"),
                   new RegExp(r"([a-z -ó2]*)\s\(titulo\soriginal\)"),
                   new RegExp(r"([a-z -ó2]*).\stítulo\soriginal"),
                   new RegExp(r"([a-z -ó2]*)\stítulo\soriginal"),
-
                   new RegExp(r"&\s([a-z -ó2]*)\stítulo\soriginal"),
                   new RegExp(r"título\sen\sidioma\soriginal:\s([a-z :]*)"),
                   new RegExp(r"([a-z -]*).\stítulo\sen\sespañol"),
@@ -85,8 +87,8 @@ class _MoviesListState extends State<MoviesList> {
                       var jsonResponse = convert.jsonDecode(response.body);
                       omdb['poster'] = jsonResponse['Poster'];
                       omdb['imdbRating'] = jsonResponse['imdbRating'];
-                      if(omdb['poster'] == 'N/A' || omdb['imdbRating'] == 'N/A')
-                        omdb = {};
+                      if (omdb['poster'] == 'N/A' ||
+                          omdb['imdbRating'] == 'N/A') omdb = {};
                       print('$title $omdb');
                     }
                   } catch (e) {}
@@ -191,64 +193,19 @@ class _MoviesListState extends State<MoviesList> {
                         var channel = (e[0] as Channel);
                         var programItem = (e[1] as ProgramItem);
                         var omdb = (e[2] as Map<String, String>);
-                        return ListTile(
-                          leading: getImageForChannel(channel.name, 50),
-                          title: Text(programItem.title),
-                          subtitle: Column(
-                            children: [
-                              omdb['poster'] == null
-                                  ? new Container()
-                                  : buildImageRounded(omdb['poster']),
-                              omdb['imdbRating'] == null
-                                  ? new Container()
-                                  : Row(
-                                      children: [
-                                        Spacer(),
-                                        Icon(
-                                          Icons.star,
-                                          color: Colors.yellow[600],
-                                        ),
-                                        Text('${omdb['imdbRating']} / 10'),
-                                        Spacer(),
-                                      ],
-                                    ),
-                              Container(
-                                child: Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Text(
-                                      '${programItem.timeStart} ${channel.name}'),
-                                ),
-                              ),
-                              Container(
-                                child: Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Text('${programItem.descriptionLong}'),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
+                        return ProgramItemCard(
+                            shouldPositionTheScroll: false,
+                            stickyKey: null,
+                            programItem: programItem,
+                            iconWidget: getImageForChannel(channel.name, 50),
+                            omdbPoster: omdb['poster'],
+                            omdbRating: omdb['imdbRating'],
+                            channelName: channel.name);
                       })
                     ],
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Container buildImageRounded(String url) {
-    return Container(
-      margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 20.0, bottom: 20.0),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(50.0)),
-      child: Center(
-        child: Hero(
-          tag: 'tag',
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(10.0),
-            child: Image.network(url, height: 300),
-          ),
-        ),
       ),
     );
   }
