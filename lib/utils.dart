@@ -290,3 +290,59 @@ ProgramItem getTheCurrentProgramOld(List<ProgramItem> pitemsList) {
   }
   return null;
 }
+
+getImageForCategory(ProgramItem pitem) {
+  var categories = pitem.classification.join(' ').toLowerCase();
+
+  var containsAnyOf = (String text, List<String> words) {
+    for (var word in words) {
+      if (text.contains(word)) return true;
+    }
+    return false;
+  };
+
+  var getIcon =
+      (IconData icon) => Icon(icon, size: 50, color: Colors.lightBlue[400]);
+
+  if (containsAnyOf(
+      categories, ['concierto', 'musi', 'recital', 'espectaculo']))
+    return getIcon(Icons.music_video);
+
+  if (containsAnyOf(categories, ['animacion', 'telefilme', 'pelicula', 'cine']))
+    return getIcon(Icons.movie);
+
+  if (categories.contains('documenta')) return getIcon(Icons.videocam);
+  if (categories.contains('depor')) return getIcon(Icons.accessibility);
+
+  if (containsAnyOf(categories, ['formacion general', 'teleclase']))
+    return getIcon(Icons.school);
+
+  if (containsAnyOf(categories, [
+    'reportaje',
+    'concurso',
+    'disertacion especializada',
+    'opinión',
+    'resumen informativo',
+    'promoción de la programación',
+    'telediario',
+    'noticiero',
+    'emision',
+    'revista',
+    'debate',
+    'capsula',
+    'boletin',
+    'spot'
+  ])) return getIcon(Icons.mic);
+
+  if (categories.contains('utilitario'))
+    return Icon(Icons.home, size: 50, color: Colors.lightBlue[400]);
+
+  if (containsAnyOf(categories, ['seriado', 'serie']))
+    return getIcon(Icons.subscriptions);
+
+  if (categories.contains('novela')) return getIcon(Icons.dvr);
+
+  print(categories);
+
+  return FlutterLogo(size: 72.0);
+}
