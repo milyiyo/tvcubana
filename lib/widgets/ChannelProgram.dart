@@ -3,7 +3,6 @@ import 'dart:math';
 
 import 'package:tvcubana/models/Channel.dart';
 import 'package:tvcubana/models/Program.dart';
-import 'package:tvcubana/models/ProgramItem.dart';
 
 import '../utils.dart';
 import 'package:flutter/material.dart';
@@ -87,7 +86,7 @@ class _ChannelProgramState extends State<ChannelProgram> {
                           (pitem) {
                             var shouldPositionTheScroll =
                                 currentProgram == pitem;
-                            return ProgramItemCard(shouldPositionTheScroll: shouldPositionTheScroll, stickyKey: stickyKey, programItem: pitem);
+                            return ProgramItemCard(shouldPositionTheScroll: shouldPositionTheScroll, stickyKey: stickyKey, programItem: pitem, iconWidget: getImageForCategory(pitem));
                           },
                         ),
                       ],

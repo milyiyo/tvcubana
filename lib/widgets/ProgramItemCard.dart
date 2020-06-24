@@ -9,11 +9,13 @@ class ProgramItemCard extends StatelessWidget {
     @required this.shouldPositionTheScroll,
     @required this.stickyKey,
     @required this.programItem,
+    @required this.iconWidget,
   }) : super(key: key);
 
   final bool shouldPositionTheScroll;
   final GlobalKey<State<StatefulWidget>> stickyKey;
   final ProgramItem programItem;
+  final Widget iconWidget;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,7 @@ class ProgramItemCard extends StatelessWidget {
             ? Colors.lightBlue[50]
             : Colors.transparent,
         child: ListTile(
-          leading: getImageForCategory(programItem),
+          leading: iconWidget, //getImageForCategory(programItem),
           title: Text(programItem.title),
           subtitle: Text(programItem.timeStart +
               ' ' +

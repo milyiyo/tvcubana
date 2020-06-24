@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:tvcubana/models/Channel.dart';
 import 'package:tvcubana/models/ProgramItem.dart';
+import 'package:tvcubana/widgets/ProgramItemCard.dart';
 
 import '../utils.dart';
 
@@ -103,41 +104,7 @@ class _ShortAgendaState extends State<ShortAgenda> {
       var channel = e['channel'] as Channel;
       var programItem = e['programItem'] as ProgramItem;
 
-      return ListTile(
-        leading: getImageForChannel(channel.name, 50),
-        subtitle: Column(
-          children: [
-            Container(
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  '${programItem.timeStart.substring(0,5)} > ${channel.name}',
-                  style: new TextStyle(fontWeight: FontWeight.w600),
-                  textAlign: TextAlign.left,
-                ),
-              ),
-            ),
-            programItem == null
-                ? new Container()
-                : Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      programItem.descriptionLong.trim(),
-                      style: TextStyle(
-                        fontSize: 14,
-                      ),
-                    ),
-                  ),
-          ],
-        ),
-        title: Text(
-          '${programItem?.title}',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 15,
-          ),
-        ),
-      );
+      return ProgramItemCard(shouldPositionTheScroll: false, stickyKey: null, programItem: programItem, iconWidget: getImageForChannel(channel.name, 50));
     }).toList();
   }
 

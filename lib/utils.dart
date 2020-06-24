@@ -291,7 +291,7 @@ ProgramItem getTheCurrentProgramOld(List<ProgramItem> pitemsList) {
   return null;
 }
 
-getImageForCategory(ProgramItem pitem) {
+Widget getImageForCategory(ProgramItem pitem) {
   var categories = pitem.classification.join(' ').toLowerCase();
 
   var containsAnyOf = (String text, List<String> words) {
