@@ -1,7 +1,9 @@
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:tvcubana/models/Channel.dart';
 import 'package:tvcubana/utils.dart';
 import 'package:flutter/material.dart';
 
+import '../ad_manager.dart';
 import 'ChannelProgram.dart';
 import 'MoviesList.dart';
 import 'ShortAgenda.dart';
@@ -14,6 +16,22 @@ class TabBarDemo extends StatefulWidget {
 class _TabBarDemoState extends State<TabBarDemo> {
   var channels = new List<Channel>();
   var isLoading = false;
+  var bannerLoaded = false;
+
+  static const MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
+    testDevices: ['0732B84DC86744BCE8059D397FBA3406'],
+    keywords: <String>['foo', 'bar'],
+    contentUrl: 'http://foo.com/bar.html',
+    childDirected: true,
+    nonPersonalizedAds: true,
+  );
+
+  BannerAd _bannerAd;
+
+  void _loadBannerAd() {
+    _bannerAd.load();
+    _bannerAd.show(anchorType: AnchorType.bottom); //.then((value) => setState(() {bannerLoaded = value;}));
+  }
 
   @override
   void initState() {
@@ -28,6 +46,30 @@ class _TabBarDemoState extends State<TabBarDemo> {
         });
       }
     });
+
+    // TODO: Initialize _bannerAd
+    _bannerAd = BannerAd(
+      adUnitId: AdManager.bannerAdUnitId,
+      size: AdSize.banner,
+      targetingInfo: targetingInfo,
+      listener: (MobileAdEvent event) {
+        if (event == MobileAdEvent.loaded) {
+          setState(() {
+            bannerLoaded = true;
+          });
+        }
+      },
+    );
+
+    // TODO: Load a Banner Ad
+    _loadBannerAd();
+  }
+
+  @override
+  void dispose() {
+    // TODO: Dispose BannerAd object
+    _bannerAd?.dispose();
+    super.dispose();
   }
 
   void reloadData() {
@@ -61,6 +103,10 @@ class _TabBarDemoState extends State<TabBarDemo> {
         ));
   }
 
+  Future<void> _initAdMob() {
+    return FirebaseAdMob.instance.initialize(appId: AdManager.appId);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -77,60 +123,67 @@ class _TabBarDemoState extends State<TabBarDemo> {
             ),
             title: Text('TVCubana'),
           ),
-          floatingActionButton: FloatingActionButton.extended(
-            onPressed: reloadData,
-            label: Text('Recargar'),
-            icon: Icon(Icons.refresh),
-            backgroundColor: Colors.blue,
+          floatingActionButton: Container(
+            margin: EdgeInsets.only(bottom: bannerLoaded ? 40 : 0),
+            child: FloatingActionButton.extended(
+              onPressed: reloadData,
+              label: Text('Recargar'),
+              icon: Icon(Icons.refresh),
+              backgroundColor: Colors.blue,
+            ),
           ),
-          body: TabBarView(
-            children: [
-              isLoading
-                  ? Center(
-                      child: Padding(
-                      padding: const EdgeInsets.only(top: 100.0),
-                      child: CircularProgressIndicator(),
-                    ))
-                  : GridView.count(
-                      // Create a grid with 2 columns. If you change the scrollDirection to
-                      // horizontal, this produces 2 rows.
-                      crossAxisCount: 2,
-                      // Generate 100 widgets that display their index in the List.
-                      children: channels
-                          .map(
-                            (e) => Card(
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            ChannelProgram(e)),
-                                  );
-                                },
-                                child: Column(
-                                  children: <Widget>[
-                                    ListTile(
-                                      title: Text(
-                                        e.name,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20,
+          body: FutureBuilder<void>(
+            future: _initAdMob(),
+            builder: (BuildContext context, AsyncSnapshot<void> snapshot) =>
+                TabBarView(
+              children: [
+                isLoading
+                    ? Center(
+                        child: Padding(
+                        padding: const EdgeInsets.only(top: 100.0),
+                        child: CircularProgressIndicator(),
+                      ))
+                    : GridView.count(
+                        // Create a grid with 2 columns. If you change the scrollDirection to
+                        // horizontal, this produces 2 rows.
+                        crossAxisCount: 2,
+                        // Generate 100 widgets that display their index in the List.
+                        children: channels
+                            .map(
+                              (e) => Card(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ChannelProgram(e)),
+                                    );
+                                  },
+                                  child: Column(
+                                    children: <Widget>[
+                                      ListTile(
+                                        title: Text(
+                                          e.name,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20,
+                                          ),
                                         ),
+                                        subtitle: Text('${e.description}.'),
                                       ),
-                                      subtitle: Text('${e.description}.'),
-                                    ),
-                                    getImageForChannel(e.name),
-                                  ],
+                                      getImageForChannel(e.name),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          )
-                          .toList(),
-                    ),
-              MoviesList(),
-              ShortAgenda(),
-            ],
+                            )
+                            .toList(),
+                      ),
+                MoviesList(),
+                ShortAgenda(),
+              ],
+            ),
           ),
         ),
       ),
