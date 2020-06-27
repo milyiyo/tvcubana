@@ -20,7 +20,7 @@ class _TabBarDemoState extends State<TabBarDemo> {
   var bannerLoaded = false;
 
   static const MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
-    testDevices: ['0732B84DC86744BCE8059D397FBA3406'],
+    testDevices: ['9B3152C88AA40F2B2725F13CCEB8F39A'],
     keywords: <String>['foo', 'bar'],
     contentUrl: 'http://foo.com/bar.html',
     childDirected: true,
