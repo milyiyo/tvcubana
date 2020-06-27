@@ -1,4 +1,5 @@
 import 'package:firebase_admob/firebase_admob.dart';
+import 'package:flutter/foundation.dart';
 import 'package:tvcubana/models/Channel.dart';
 import 'package:tvcubana/utils.dart';
 import 'package:flutter/material.dart';
@@ -29,8 +30,11 @@ class _TabBarDemoState extends State<TabBarDemo> {
   BannerAd _bannerAd;
 
   void _loadBannerAd() {
-    _bannerAd.load();
-    _bannerAd.show(anchorType: AnchorType.bottom); //.then((value) => setState(() {bannerLoaded = value;}));
+    _bannerAd
+      ..load()
+      ..show(
+          anchorType: AnchorType
+              .bottom); //.then((value) => setState(() {bannerLoaded = value;}));
   }
 
   @override
@@ -47,22 +51,22 @@ class _TabBarDemoState extends State<TabBarDemo> {
       }
     });
 
-    // TODO: Initialize _bannerAd
-    _bannerAd = BannerAd(
-      adUnitId: AdManager.bannerAdUnitId,
-      size: AdSize.banner,
-      targetingInfo: targetingInfo,
-      listener: (MobileAdEvent event) {
-        if (event == MobileAdEvent.loaded) {
-          setState(() {
-            bannerLoaded = true;
-          });
-        }
-      },
-    );
+    if (!kIsWeb) {
+      _bannerAd = BannerAd(
+        adUnitId: AdManager.bannerAdUnitId,
+        size: AdSize.banner,
+        targetingInfo: targetingInfo,
+        listener: (MobileAdEvent event) {
+          if (event == MobileAdEvent.loaded) {
+            setState(() {
+              bannerLoaded = true;
+            });
+          }
+        },
+      );
 
-    // TODO: Load a Banner Ad
-    _loadBannerAd();
+      _loadBannerAd();
+    }
   }
 
   @override
@@ -104,7 +108,8 @@ class _TabBarDemoState extends State<TabBarDemo> {
   }
 
   Future<void> _initAdMob() {
-    return FirebaseAdMob.instance.initialize(appId: AdManager.appId);
+    if (!kIsWeb)
+      return FirebaseAdMob.instance.initialize(appId: AdManager.appId);
   }
 
   @override
