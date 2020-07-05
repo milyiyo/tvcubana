@@ -136,6 +136,7 @@ class _ShortAgendaState extends State<ShortAgenda> {
                 ),
                 headerText('Después'),
                 Column(children: getListOfItems(channelNextProg)),
+                new Container(margin: EdgeInsets.symmetric(vertical: 40))
               ],
       ),
     ]);

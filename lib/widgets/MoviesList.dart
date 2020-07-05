@@ -201,7 +201,8 @@ class _MoviesListState extends State<MoviesList> {
                             omdbPoster: omdb['poster'],
                             omdbRating: omdb['imdbRating'],
                             channelName: channel.name);
-                      })
+                      }),
+                      new Container(margin: EdgeInsets.symmetric(vertical: 40))
                     ],
             ),
           ),

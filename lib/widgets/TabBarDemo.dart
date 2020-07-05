@@ -153,7 +153,7 @@ class _TabBarDemoState extends State<TabBarDemo> {
                         // horizontal, this produces 2 rows.
                         crossAxisCount: 2,
                         // Generate 100 widgets that display their index in the List.
-                        children: channels
+                        children: [...channels
                             .map(
                               (e) => Card(
                                 child: GestureDetector(
@@ -183,7 +183,7 @@ class _TabBarDemoState extends State<TabBarDemo> {
                                 ),
                               ),
                             )
-                            .toList(),
+                            , new Container()],
                       ),
                 MoviesList(),
                 ShortAgenda(),
