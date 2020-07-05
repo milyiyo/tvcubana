@@ -85,6 +85,7 @@ class _MoviesListState extends State<MoviesList> {
                     var response = await http.get(url);
                     if (response.statusCode == 200) {
                       var jsonResponse = convert.jsonDecode(response.body);
+                      omdb['imdbID'] = jsonResponse['imdbID'];
                       omdb['poster'] = jsonResponse['Poster'];
                       omdb['imdbRating'] = jsonResponse['imdbRating'];
                       if (omdb['poster'] == 'N/A' ||
@@ -200,6 +201,7 @@ class _MoviesListState extends State<MoviesList> {
                             iconWidget: getImageForChannel(channel.name, 50),
                             omdbPoster: omdb['poster'],
                             omdbRating: omdb['imdbRating'],
+                            imdbID: omdb['imdbID'],
                             channelName: channel.name);
                       }),
                       new Container(margin: EdgeInsets.symmetric(vertical: 40))
