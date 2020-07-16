@@ -131,6 +131,7 @@ class _TabBarDemoState extends State<TabBarDemo> {
           floatingActionButton: Container(
             margin: EdgeInsets.only(bottom: bannerLoaded ? 40 : 0),
             child: FloatingActionButton.extended(
+              heroTag: 'tag2',
               onPressed: reloadData,
               label: Text('Recargar'),
               icon: Icon(Icons.refresh),
