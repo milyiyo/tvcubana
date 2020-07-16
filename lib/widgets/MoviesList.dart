@@ -44,19 +44,23 @@ class _MoviesListState extends State<MoviesList> {
                     programItem.descriptionLong.toLowerCase();
 
                 var exps = [
-                  new RegExp(r"tiempo\sde\scine:\s([a-z :]*)"),
-                  new RegExp(r"multicine:\s([a-z :]*)"),
-                  new RegExp(r"filmecito:\s([a-z :]*)"),
+                  new RegExp(r"tiempo\sde\scine:\s([0-9a-z :]*)"),
+                  new RegExp(r"multicine:\s([a-z0-9 :]*)"),
+                  new RegExp(r"domingo en casa:\s([A-Za-z0-9 :]*)"),
+                  new RegExp(r"filmecito:\s([a-z ñáéíóú:]*)"),
+                  new RegExp(r"filme:\s([A-Za-z áéíóú:]*)"),
                   new RegExp(r"minicinema:\s([a-z :]*)"),
-                  new RegExp(r"directores\sen\sacción:\s([a-z :]*)"),
-                  new RegExp(r"ellas\sy\sellos:(\s)*([a-z :]*)"),
+                  new RegExp(r"directores\sen\sacción:(\s)*([A-Za-z :]*)"),
+                  new RegExp(r"ellas\sy\sellos:(\s)*([A-Za-z :]*)"),
                   new RegExp(r"cine\sde\saventuras:\s([a-z :]*)"),
+                  new RegExp(r"cinema\sjoven:\s([a-z :]*)"),
                   new RegExp(r"algo\spara\srecordar:\s([a-z :]*)"),
                   new RegExp(r"t[i-í]tulo\soriginal:\s([a-z :]*)"),
                   new RegExp(r"t[i-í]tulo\soriginal\s([a-z :]*)"),
                   new RegExp(r"\w*t[i-í]tulo\soriginal:\s([a-z -\s1]*)"),
                   new RegExp(
                       r"&\s[a-z -ó2]*\st[i-í]tulo\soriginal:([a-z :\s0-9]*)"),
+                  new RegExp(r"([a-z ]*).\sTítulo\soriginal"),
                   new RegExp(r"([a-z -ó2]*)\s\(titulo\soriginal\)"),
                   new RegExp(r"([a-z -ó2]*).\stítulo\soriginal"),
                   new RegExp(r"([a-z -ó2]*)\stítulo\soriginal"),
