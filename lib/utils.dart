@@ -43,12 +43,12 @@ Map<String, String> getChannelImages() {
   images['Tele Cristal'] = 'assets/images/tele_cristal.jpg';
   images['MiTV'] = 'assets/images/mitv.jpg';
   images['Islavisión'] = 'assets/images/islavision-icon.png';
-  images ['CNC Tv'] = 'assets/images/cnctv-icon.jpeg';
-  images ['Perlavisión'] = 'assets/images/perlavision-icon.png';
-  images ['Solvisión'] = 'assets/images/solvision-icon.jpeg';
-  images ['Tele Turquino'] = 'assets/images/tvSantiago-icon.jpg';
-  images ['Tunasvisión'] = 'assets/images/tunasvision-icon.png';
-  images ['TV Avileña'] = 'assets/images/tvavilena-icon.png';
+  images['CNC Tv'] = 'assets/images/cnctv-icon.jpeg';
+  images['Perlavisión'] = 'assets/images/perlavision-icon.png';
+  images['Solvisión'] = 'assets/images/solvision-icon.jpeg';
+  images['Tele Turquino'] = 'assets/images/tvSantiago-icon.jpg';
+  images['Tunasvisión'] = 'assets/images/tunasvision-icon.png';
+  images['TV Avileña'] = 'assets/images/tvavilena-icon.png';
   images['TV Camaguey'] = 'assets/images/tvcamaguey-icon.png';
   images['TV Yumuri'] = 'assets/images/tvyumuri-icon.png';
   images['Telerebelde Plus'] = 'assets/images/telerebeldePlus-icon.png';
@@ -234,7 +234,7 @@ Future<bool> hasCacheFor(String dateStr) async {
   if (cacheDateStr == null && cacheChannelStr != null) {
     return false;
   }
-  // print('end:hasCacheFor $cacheDateStr ${dateStr == cacheDateStr}');
+  // print('end:hasCacheFor $cacheDateStr ${dateStr == cacheDateStr} $dateStr');
   return DateTime.parse(dateStr).isBefore(DateTime.parse(cacheDateStr));
 }
 
