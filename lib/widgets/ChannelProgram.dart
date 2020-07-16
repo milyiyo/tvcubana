@@ -57,6 +57,7 @@ class _ChannelProgramState extends State<ChannelProgram> {
 
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'tag1',
         onPressed: reloadData,
         label: Text('Recargar'),
         icon: Icon(Icons.refresh),
