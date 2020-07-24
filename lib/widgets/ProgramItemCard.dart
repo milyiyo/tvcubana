@@ -1,9 +1,14 @@
+import 'dart:math';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tvcubana/models/ProgramItem.dart';
 import 'package:tvcubana/widgets/ImdbPage.dart';
 
+import '../notifications.dart';
+
 class ProgramItemCard extends StatelessWidget {
-  const ProgramItemCard({
+  ProgramItemCard({
     Key key,
     @required this.shouldPositionTheScroll,
     @required this.stickyKey,
@@ -50,6 +55,19 @@ class ProgramItemCard extends StatelessWidget {
     );
   }
 
+  List<int> _notifRanges = [60, 45, 30, 20, 15, 10, 5, 3, 0];
+
+  int _selectedNotifRange = 0;
+
+//   final notifRange = DropdownButton(
+//   value: _selectedNotifRange,
+//   items: _notifRanges
+//       .map((code) =>
+//           new DropdownMenuItem(value: code, child: new Text(code.toString())))
+//       .toList(),
+//   onChanged: null,
+// );
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -59,7 +77,20 @@ class ProgramItemCard extends StatelessWidget {
             shouldPositionTheScroll ? Colors.lightBlue[50] : Colors.transparent,
         child: ListTile(
           leading: iconWidget,
-          title: Text(programItem.title),
+          title: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+            Expanded(
+              child: Text(
+                programItem.title
+              ),
+            ),
+            FlatButton(
+              onPressed: () => addNotification(
+                  programItem.id, programItem.dateStart, programItem.timeStart),
+              child: Icon(
+                Icons.notifications_none,
+              ),
+            ),
+          ]),
           subtitle: Column(
             children: [
               omdbPoster == null
@@ -81,7 +112,8 @@ class ProgramItemCard extends StatelessWidget {
               Container(
                 child: Align(
                   alignment: Alignment.topLeft,
-                  child: Text('${programItem.timeStart} ${channelName == null ? '' : channelName}'),
+                  child: Text(
+                      '${programItem.timeStart} ${channelName == null ? '' : channelName}'),
                 ),
               ),
               Container(
