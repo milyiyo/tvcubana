@@ -132,6 +132,7 @@ Future<List<Program>> getProgramFromURL(Channel channel) async {
       var jsonResponse = convert.jsonDecode(response.body);
       for (var pjson in jsonResponse) {
         result.add(new ProgramItem(
+            pjson['_id'],
             pjson['descripcion'],
             pjson['descripcion_ampliada'],
             pjson['duracion'],
