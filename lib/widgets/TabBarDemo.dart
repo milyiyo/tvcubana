@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/foundation.dart';
 import 'package:tvcubana/models/Channel.dart';
@@ -30,6 +32,7 @@ class _TabBarDemoState extends State<TabBarDemo> {
   BannerAd _bannerAd;
 
   void _loadBannerAd() {
+    return;
     _bannerAd
       ..load()
       ..show(
@@ -66,12 +69,15 @@ class _TabBarDemoState extends State<TabBarDemo> {
       );
 
       _loadBannerAd();
+
+      Timer.periodic(new Duration(seconds: 5), (timer) {
+        _loadBannerAd();
+      });
     }
   }
 
   @override
   void dispose() {
-    // TODO: Dispose BannerAd object
     _bannerAd?.dispose();
     super.dispose();
   }
@@ -149,42 +155,48 @@ class _TabBarDemoState extends State<TabBarDemo> {
                         padding: const EdgeInsets.only(top: 100.0),
                         child: CircularProgressIndicator(),
                       ))
-                    : GridView.count(
-                        // Create a grid with 2 columns. If you change the scrollDirection to
-                        // horizontal, this produces 2 rows.
-                        crossAxisCount: 2,
-                        // Generate 100 widgets that display their index in the List.
-                        children: [...channels
-                            .map(
-                              (e) => Card(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              ChannelProgram(e)),
-                                    );
-                                  },
-                                  child: Column(
-                                    children: <Widget>[
-                                      ListTile(
-                                        title: Text(
-                                          e.name,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
+                    : OrientationBuilder(
+                        builder: (context, orientation) {
+                          return GridView.count(
+                            // Create a grid with 2 columns. If you change the scrollDirection to
+                            // horizontal, this produces 2 rows.
+                            crossAxisCount:
+                                orientation == Orientation.portrait ? 2 : 4,
+                            // Generate 100 widgets that display their index in the List.
+                            children: [
+                              ...channels.map(
+                                (e) => Card(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ChannelProgram(e)),
+                                      );
+                                    },
+                                    child: Column(
+                                      children: <Widget>[
+                                        ListTile(
+                                          title: Text(
+                                            e.name,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20,
+                                            ),
                                           ),
+                                          subtitle: Text('${e.description}.'),
                                         ),
-                                        subtitle: Text('${e.description}.'),
-                                      ),
-                                      getImageForChannel(e.name),
-                                    ],
+                                        getImageForChannel(e.name),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
-                            )
-                            , new Container()],
+                              new Container()
+                            ],
+                          );
+                        },
                       ),
                 MoviesList(),
                 ShortAgenda(),
