@@ -111,7 +111,7 @@ class ProgramItemCard extends StatelessWidget {
   }
 }
 
-class NotificationButton extends StatelessWidget {
+class NotificationButton extends StatefulWidget {
   const NotificationButton({
     Key key,
     @required this.programItem,
@@ -122,16 +122,40 @@ class NotificationButton extends StatelessWidget {
   final String channelName;
 
   @override
+  _NotificationButtonState createState() => _NotificationButtonState();
+}
+
+class _NotificationButtonState extends State<NotificationButton> {
+  @override
   Widget build(BuildContext context) {
-    if (DateTime.parse(programItem.dateStart + ' ' + programItem.timeStart)
+    if (DateTime.parse(
+            widget.programItem.dateStart + ' ' + widget.programItem.timeStart)
         .isAfter(DateTime.now())) {
-      return FlatButton(
-        onPressed: () => addNotification(programItem.id, programItem.dateStart,
-            programItem.timeStart, programItem.title, channelName),
-        child: Icon(
-          Icons.notifications_none,
-        ),
-      );
+      if (existNotificationForProgram(widget.programItem.id)) {
+        return FlatButton(
+          onPressed: () => {},
+          child: Icon(
+            Icons.notifications_active,
+          ),
+        );
+      } else {
+        return FlatButton(
+          onPressed: () {
+            addNotification(
+                widget.programItem.id,
+                widget.programItem.dateStart,
+                widget.programItem.timeStart,
+                widget.programItem.title,
+                widget.channelName);
+            setState(() {
+              
+            });
+          },
+          child: Icon(
+            Icons.notifications_none,
+          ),
+        );
+      }
     } else {
       return new Container();
     }

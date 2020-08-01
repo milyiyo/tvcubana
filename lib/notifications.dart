@@ -26,14 +26,20 @@ class Notification {
 
 List<Notification> notifications = [];
 
+bool existNotificationForProgram(String programId) {
+  return notifications
+          .indexWhere((notif) => notif.programItemId == programId) !=
+      -1;
+}
+
 void addNotification(String programItemId, String dateStart, String timeStart,
     String programTitle, String channelName) async {
   notifications = await retrieveNotificationsFromCache();
   notifications.add(Notification(programItemId, dateStart, timeStart));
   storeNotificationsInCache(notifications);
 
-  scheduleNotification(100, DateTime.parse('$dateStart $timeStart'), programTitle,
-      'Por $channelName en 10 minutos.');
+  scheduleNotification(100, DateTime.parse('$dateStart $timeStart'),
+      programTitle, 'Por $channelName en 10 minutos.');
 }
 
 Future<void> storeNotificationsInCache(List<Notification> notifications) async {
