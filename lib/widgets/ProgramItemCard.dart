@@ -68,13 +68,8 @@ class ProgramItemCard extends StatelessWidget {
             Expanded(
               child: Text(programItem.title),
             ),
-            FlatButton(
-              onPressed: () => addNotification(
-                  programItem.id, programItem.dateStart, programItem.timeStart, programItem.title, channelName),
-              child: Icon(
-                Icons.notifications_none,
-              ),
-            ),
+            NotificationButton(
+                programItem: programItem, channelName: channelName),
           ]),
           subtitle: Column(
             children: [
@@ -113,5 +108,32 @@ class ProgramItemCard extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class NotificationButton extends StatelessWidget {
+  const NotificationButton({
+    Key key,
+    @required this.programItem,
+    @required this.channelName,
+  }) : super(key: key);
+
+  final ProgramItem programItem;
+  final String channelName;
+
+  @override
+  Widget build(BuildContext context) {
+    if (DateTime.parse(programItem.dateStart + ' ' + programItem.timeStart)
+        .isAfter(DateTime.now())) {
+      return FlatButton(
+        onPressed: () => addNotification(programItem.id, programItem.dateStart,
+            programItem.timeStart, programItem.title, channelName),
+        child: Icon(
+          Icons.notifications_none,
+        ),
+      );
+    } else {
+      return new Container();
+    }
   }
 }
