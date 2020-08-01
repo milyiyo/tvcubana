@@ -84,8 +84,31 @@ class ProgramItemCard extends StatelessWidget {
               ),
             ),
             FlatButton(
-              onPressed: () => addNotification(
-                  programItem.id, programItem.dateStart, programItem.timeStart),
+              onPressed: () async {
+                      //
+                      // var vibrationPattern = Int64List(4);
+                      // vibrationPattern[0] = 0;
+                      // vibrationPattern[1] = 1000;
+                      // vibrationPattern[2] = 5000;
+                      // vibrationPattern[3] = 2000;
+
+                      // var id = schNotifications.schedule(
+                      //   DateTime.now().add(Duration(seconds: 5)),
+                      //   title: '${programItem.timeStart} ${channelName == null ? '' : channelName}',
+                      //   body: '${programItem.description}',
+                      //   vibrationPattern: vibrationPattern,
+                      //   enableLights: true,
+                      //   color: const Color.fromARGB(255, 255, 0, 0),
+                      //   ledColor: const Color.fromARGB(255, 255, 0, 0),
+                      //   ledOnMs: 1000,
+                      //   ledOffMs: 500,
+                      // );
+                      // return id;
+                    }
+              // () => 
+              // addNotification(
+                  // programItem.id, programItem.dateStart, programItem.timeStart)
+                  ,
               child: Icon(
                 Icons.notifications_none,
               ),

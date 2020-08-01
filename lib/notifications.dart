@@ -29,6 +29,7 @@ void addNotification(
   notifications.add(Notification(programItemId, dateStart, timeStart));
   print(notifications[0]);
   storeNotificationsInCache(notifications);
+
 }
 
 Future<void> storeNotificationsInCache(List<Notification> notifications) async {

@@ -9,6 +9,8 @@ import 'ChannelProgram.dart';
 import 'MoviesList.dart';
 import 'ShortAgenda.dart';
 
+
+
 class TabBarDemo extends StatefulWidget {
   @override
   _TabBarDemoState createState() => _TabBarDemoState();
@@ -67,7 +69,10 @@ class _TabBarDemoState extends State<TabBarDemo> {
 
       _loadBannerAd();
     }
+
   }
+
+  // ScheduleNotifications notifications;
 
   @override
   void dispose() {
@@ -154,37 +159,38 @@ class _TabBarDemoState extends State<TabBarDemo> {
                         // horizontal, this produces 2 rows.
                         crossAxisCount: 2,
                         // Generate 100 widgets that display their index in the List.
-                        children: [...channels
-                            .map(
-                              (e) => Card(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              ChannelProgram(e)),
-                                    );
-                                  },
-                                  child: Column(
-                                    children: <Widget>[
-                                      ListTile(
-                                        title: Text(
-                                          e.name,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                          ),
+                        children: [
+                          ...channels.map(
+                            (e) => Card(
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ChannelProgram(e)),
+                                  );
+                                },
+                                child: Column(
+                                  children: <Widget>[
+                                    ListTile(
+                                      title: Text(
+                                        e.name,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
                                         ),
-                                        subtitle: Text('${e.description}.'),
                                       ),
-                                      getImageForChannel(e.name),
-                                    ],
-                                  ),
+                                      subtitle: Text('${e.description}.'),
+                                    ),
+                                    getImageForChannel(e.name),
+                                  ],
                                 ),
                               ),
-                            )
-                            , new Container()],
+                            ),
+                          ),
+                          new Container()
+                        ],
                       ),
                 MoviesList(),
                 ShortAgenda(),
