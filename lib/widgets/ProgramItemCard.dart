@@ -55,19 +55,6 @@ class ProgramItemCard extends StatelessWidget {
     );
   }
 
-  List<int> _notifRanges = [60, 45, 30, 20, 15, 10, 5, 3, 0];
-
-  int _selectedNotifRange = 0;
-
-//   final notifRange = DropdownButton(
-//   value: _selectedNotifRange,
-//   items: _notifRanges
-//       .map((code) =>
-//           new DropdownMenuItem(value: code, child: new Text(code.toString())))
-//       .toList(),
-//   onChanged: null,
-// );
-
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -79,36 +66,11 @@ class ProgramItemCard extends StatelessWidget {
           leading: iconWidget,
           title: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
             Expanded(
-              child: Text(
-                programItem.title
-              ),
+              child: Text(programItem.title),
             ),
             FlatButton(
-              onPressed: () async {
-                      //
-                      // var vibrationPattern = Int64List(4);
-                      // vibrationPattern[0] = 0;
-                      // vibrationPattern[1] = 1000;
-                      // vibrationPattern[2] = 5000;
-                      // vibrationPattern[3] = 2000;
-
-                      // var id = schNotifications.schedule(
-                      //   DateTime.now().add(Duration(seconds: 5)),
-                      //   title: '${programItem.timeStart} ${channelName == null ? '' : channelName}',
-                      //   body: '${programItem.description}',
-                      //   vibrationPattern: vibrationPattern,
-                      //   enableLights: true,
-                      //   color: const Color.fromARGB(255, 255, 0, 0),
-                      //   ledColor: const Color.fromARGB(255, 255, 0, 0),
-                      //   ledOnMs: 1000,
-                      //   ledOffMs: 500,
-                      // );
-                      // return id;
-                    }
-              // () => 
-              // addNotification(
-                  // programItem.id, programItem.dateStart, programItem.timeStart)
-                  ,
+              onPressed: () => addNotification(
+                  programItem.id, programItem.dateStart, programItem.timeStart, programItem.title, channelName),
               child: Icon(
                 Icons.notifications_none,
               ),
