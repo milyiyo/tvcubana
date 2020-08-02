@@ -45,8 +45,9 @@ void addNotification(String programItemId, String dateStart, String timeStart,
   notifications.add(Notification(id, programItemId, dateStart, timeStart));
   storeNotificationsInCache(notifications);
 
+  var chanName = channelName == null ? '' : 'Por ' + channelName;
   scheduleNotification(id, DateTime.parse('$dateStart $timeStart'),
-      programTitle, 'Por $channelName en 10 minutos.');
+      programTitle, '$chanName en 10 minutos.');
 }
 
 void deleteNotification(String programItemId) async {
@@ -61,12 +62,14 @@ void deleteNotification(String programItemId) async {
 
 void deleteOldNotifications() async {
   notifications = await retrieveNotificationsFromCache();
-  List<Notification> oldNotifications = notifications.where((notif) =>
-      DateTime.parse(notif.dateStart + ' ' + notif.timeStart)
-          .isBefore(DateTime.now())).toList();
-  notifications = notifications.where((notif) =>
-      DateTime.parse(notif.dateStart + ' ' + notif.timeStart)
-          .isAfter(DateTime.now())).toList();
+  List<Notification> oldNotifications = notifications
+      .where((notif) => DateTime.parse(notif.dateStart + ' ' + notif.timeStart)
+          .isBefore(DateTime.now()))
+      .toList();
+  notifications = notifications
+      .where((notif) => DateTime.parse(notif.dateStart + ' ' + notif.timeStart)
+          .isAfter(DateTime.now()))
+      .toList();
   storeNotificationsInCache(notifications);
 
   oldNotifications.map((e) => removeSchedNotification(e.id));
@@ -122,8 +125,13 @@ void scheduleNotification(
 
   var androidPlatformChannelSpecifics = AndroidNotificationDetails(
       'channel_id_TVCubana', 'channel_TVCubana', 'channel_TVCubana_description',
+      importance: Importance.Max,
+      priority: Priority.High,
       vibrationPattern: vibrationPattern,
       enableLights: true,
+      enableVibration: true,
+      styleInformation: DefaultStyleInformation(true, true),
+      playSound: true,
       color: const Color.fromARGB(255, 255, 0, 0),
       ledColor: const Color.fromARGB(255, 255, 0, 0),
       ledOnMs: 1000,
