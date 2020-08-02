@@ -46,7 +46,7 @@ class _TabBarDemoState extends State<TabBarDemo> {
     isLoading = true;
     getChannels(false).then((value) {
       if (mounted) {
-        channels = value;
+        channels = value.where((element) => element.name != null).toList();
         setState(() {
           isLoading = false;
         });
