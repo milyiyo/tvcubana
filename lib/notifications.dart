@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui';
 
@@ -6,18 +7,21 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Notification {
+  int id;
   String programItemId;
   String dateStart;
   String timeStart;
 
-  Notification(this.programItemId, this.dateStart, this.timeStart);
+  Notification(this.id, this.programItemId, this.dateStart, this.timeStart);
 
   Notification.fromJson(Map<String, dynamic> pjson)
-      : programItemId = pjson['programItemId'],
+      : id = pjson['id'],
+        programItemId = pjson['programItemId'],
         dateStart = pjson['dateStart'],
         timeStart = pjson['timeStart'];
 
   Map<String, dynamic> toJson() => {
+        'id': id,
         'programItemId': programItemId,
         'dateStart': dateStart,
         'timeStart': timeStart,
@@ -32,14 +36,40 @@ bool existNotificationForProgram(String programId) {
       -1;
 }
 
+var randomInt = new Random();
+
 void addNotification(String programItemId, String dateStart, String timeStart,
     String programTitle, String channelName) async {
+  int id = randomInt.nextInt(1000);
   notifications = await retrieveNotificationsFromCache();
-  notifications.add(Notification(programItemId, dateStart, timeStart));
+  notifications.add(Notification(id, programItemId, dateStart, timeStart));
   storeNotificationsInCache(notifications);
 
-  scheduleNotification(100, DateTime.parse('$dateStart $timeStart'),
+  scheduleNotification(id, DateTime.parse('$dateStart $timeStart'),
       programTitle, 'Por $channelName en 10 minutos.');
+}
+
+void deleteNotification(String programItemId) async {
+  notifications = await retrieveNotificationsFromCache();
+  int idNotif =
+      notifications.indexWhere((notif) => notif.programItemId == programItemId);
+  notifications.removeWhere((notif) => notif.programItemId == programItemId);
+  storeNotificationsInCache(notifications);
+
+  removeSchedNotification(idNotif);
+}
+
+void deleteOldNotifications() async {
+  notifications = await retrieveNotificationsFromCache();
+  List<Notification> oldNotifications = notifications.where((notif) =>
+      DateTime.parse(notif.dateStart + ' ' + notif.timeStart)
+          .isBefore(DateTime.now())).toList();
+  notifications = notifications.where((notif) =>
+      DateTime.parse(notif.dateStart + ' ' + notif.timeStart)
+          .isAfter(DateTime.now())).toList();
+  storeNotificationsInCache(notifications);
+
+  oldNotifications.map((e) => removeSchedNotification(e.id));
 }
 
 Future<void> storeNotificationsInCache(List<Notification> notifications) async {
@@ -108,7 +138,7 @@ void scheduleNotification(
   flutterLocalNotificationsPlugin
       .schedule(id, title, body, scheduledNotificationDateTime,
           platformChannelSpecifics,
-          androidAllowWhileIdle: true, payload: 'item x')
+          androidAllowWhileIdle: true, payload: 'item')
       .then((value) => print('Notification executed'))
       .catchError((err) => print('Error ' + err));
 
@@ -117,4 +147,8 @@ void scheduleNotification(
       print([pnr.id, pnr.title, pnr.body, pnr.payload]);
     });
   });
+}
+
+void removeSchedNotification(int idNotification) {
+  flutterLocalNotificationsPlugin.cancel(idNotification);
 }

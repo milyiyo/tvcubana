@@ -133,7 +133,12 @@ class _NotificationButtonState extends State<NotificationButton> {
         .isAfter(DateTime.now())) {
       if (existNotificationForProgram(widget.programItem.id)) {
         return FlatButton(
-          onPressed: () => {},
+          onPressed: () {
+            deleteNotification(widget.programItem.id);
+            setState(() {
+              
+            });
+          },
           child: Icon(
             Icons.notifications_active,
           ),

@@ -20,6 +20,7 @@ void main() async {
   //_setTargetPlatformForDesktop();
   // var channels = await getChannels();
   // print(channels);
+  deleteOldNotifications();
   initializeNotifications();
 
   runApp(MaterialApp(
