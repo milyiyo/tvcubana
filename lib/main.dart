@@ -7,6 +7,7 @@ import 'dart:convert';
 
 import 'models/Channel.dart';
 import 'widgets/TabBarDemo.dart';
+import 'notifications.dart';
 
 const String PARSE_APP_ID = 'Fy0qjfqDevGKQPT5XaANnq9EbQ1EbP2OtiQzhwWV';
 const String PARSE_APP_URL = 'https://parseapi.back4app.com';
@@ -14,10 +15,13 @@ const String MASTER_KEY = 'mPpFoKblASqkm362EhSv6Bw3AsXKTqJqLEBpmps6';
 const String LIVE_QUERY_URL = 'wss://qwertydomain.back4app.io';
 
 void main() async {
+  // needed if you intend to initialize in the `main` function
   WidgetsFlutterBinding.ensureInitialized();
   //_setTargetPlatformForDesktop();
   // var channels = await getChannels();
   // print(channels);
+  deleteOldNotifications();
+  initializeNotifications();
 
   runApp(MaterialApp(
     title: 'Navigation Basics',
@@ -27,7 +31,7 @@ void main() async {
 
 void testJsons() {
   // var pi = new ProgramItem('description', 'descriptionLong', 'duration', 'date',
-      // 'dateStart', 'dateEnd', 'timeStart', 'timeEnd', 'title', []);
+  // 'dateStart', 'dateEnd', 'timeStart', 'timeEnd', 'title', []);
   // var p = new Program('date', [pi]);
   var c = new Channel('id', 'name', 'logo', 'description');
 

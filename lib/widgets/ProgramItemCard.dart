@@ -1,9 +1,14 @@
+import 'dart:math';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tvcubana/models/ProgramItem.dart';
 import 'package:tvcubana/widgets/ImdbPage.dart';
 
+import '../notifications.dart';
+
 class ProgramItemCard extends StatelessWidget {
-  const ProgramItemCard({
+  ProgramItemCard({
     Key key,
     @required this.shouldPositionTheScroll,
     @required this.stickyKey,
@@ -59,7 +64,13 @@ class ProgramItemCard extends StatelessWidget {
             shouldPositionTheScroll ? Colors.lightBlue[50] : Colors.transparent,
         child: ListTile(
           leading: iconWidget,
-          title: Text(programItem.title),
+          title: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+            Expanded(
+              child: Text(programItem.title),
+            ),
+            NotificationButton(
+                programItem: programItem, channelName: channelName),
+          ]),
           subtitle: Column(
             children: [
               omdbPoster == null
@@ -81,7 +92,8 @@ class ProgramItemCard extends StatelessWidget {
               Container(
                 child: Align(
                   alignment: Alignment.topLeft,
-                  child: Text('${programItem.timeStart} ${channelName == null ? '' : channelName}'),
+                  child: Text(
+                      '${programItem.timeStart} ${channelName == null ? '' : channelName}'),
                 ),
               ),
               Container(
@@ -96,5 +108,61 @@ class ProgramItemCard extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class NotificationButton extends StatefulWidget {
+  const NotificationButton({
+    Key key,
+    @required this.programItem,
+    @required this.channelName,
+  }) : super(key: key);
+
+  final ProgramItem programItem;
+  final String channelName;
+
+  @override
+  _NotificationButtonState createState() => _NotificationButtonState();
+}
+
+class _NotificationButtonState extends State<NotificationButton> {
+  @override
+  Widget build(BuildContext context) {
+    if (DateTime.parse(
+            widget.programItem.dateStart + ' ' + widget.programItem.timeStart)
+        .isAfter(DateTime.now())) {
+      if (existNotificationForProgram(widget.programItem.id)) {
+        return FlatButton(
+          onPressed: () {
+            deleteNotification(widget.programItem.id);
+            setState(() {
+              
+            });
+          },
+          child: Icon(
+            Icons.notifications_active,
+          ),
+        );
+      } else {
+        return FlatButton(
+          onPressed: () {
+            addNotification(
+                widget.programItem.id,
+                widget.programItem.dateStart,
+                widget.programItem.timeStart,
+                widget.programItem.title,
+                widget.channelName);
+            setState(() {
+              
+            });
+          },
+          child: Icon(
+            Icons.notifications_none,
+          ),
+        );
+      }
+    } else {
+      return new Container();
+    }
   }
 }
