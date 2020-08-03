@@ -235,8 +235,10 @@ Future<bool> hasCacheFor(String dateStr) async {
   if (cacheDateStr == null && cacheChannelStr != null) {
     return false;
   }
+  var parsedDate = DateTime.parse(dateStr);
   // print('end:hasCacheFor $cacheDateStr ${dateStr == cacheDateStr} $dateStr');
-  return DateTime.parse(dateStr).isBefore(DateTime.parse(cacheDateStr));
+  return parsedDate.isBefore(DateTime.parse(cacheDateStr)) ||
+      parsedDate == DateTime.parse(cacheDateStr);
 }
 
 Future<bool> hasCacheForProgram(String key) async {
