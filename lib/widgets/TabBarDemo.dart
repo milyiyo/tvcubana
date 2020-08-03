@@ -1,15 +1,10 @@
-import 'package:firebase_admob/firebase_admob.dart';
-import 'package:flutter/foundation.dart';
 import 'package:tvcubana/models/Channel.dart';
 import 'package:tvcubana/utils.dart';
 import 'package:flutter/material.dart';
 
-import '../ad_manager.dart';
 import 'ChannelProgram.dart';
 import 'MoviesList.dart';
 import 'ShortAgenda.dart';
-
-
 
 class TabBarDemo extends StatefulWidget {
   @override
@@ -20,24 +15,6 @@ class _TabBarDemoState extends State<TabBarDemo> {
   var channels = new List<Channel>();
   var isLoading = false;
   var bannerLoaded = false;
-
-  static const MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
-    testDevices: ['9B3152C88AA40F2B2725F13CCEB8F39A'],
-    keywords: <String>['foo', 'bar'],
-    contentUrl: 'http://foo.com/bar.html',
-    childDirected: true,
-    nonPersonalizedAds: true,
-  );
-
-  BannerAd _bannerAd;
-
-  void _loadBannerAd() {
-    _bannerAd
-      ..load()
-      ..show(
-          anchorType: AnchorType
-              .bottom); //.then((value) => setState(() {bannerLoaded = value;}));
-  }
 
   @override
   void initState() {
@@ -52,33 +29,6 @@ class _TabBarDemoState extends State<TabBarDemo> {
         });
       }
     });
-
-    if (!kIsWeb) {
-      _bannerAd = BannerAd(
-        adUnitId: AdManager.bannerAdUnitId,
-        size: AdSize.banner,
-        targetingInfo: targetingInfo,
-        listener: (MobileAdEvent event) {
-          if (event == MobileAdEvent.loaded) {
-            setState(() {
-              bannerLoaded = true;
-            });
-          }
-        },
-      );
-
-      _loadBannerAd();
-    }
-
-  }
-
-  // ScheduleNotifications notifications;
-
-  @override
-  void dispose() {
-    // TODO: Dispose BannerAd object
-    _bannerAd?.dispose();
-    super.dispose();
   }
 
   void reloadData() {
@@ -112,11 +62,6 @@ class _TabBarDemoState extends State<TabBarDemo> {
         ));
   }
 
-  Future<void> _initAdMob() {
-    if (!kIsWeb)
-      return FirebaseAdMob.instance.initialize(appId: AdManager.appId);
-  }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -144,7 +89,6 @@ class _TabBarDemoState extends State<TabBarDemo> {
             ),
           ),
           body: FutureBuilder<void>(
-            future: _initAdMob(),
             builder: (BuildContext context, AsyncSnapshot<void> snapshot) =>
                 TabBarView(
               children: [
