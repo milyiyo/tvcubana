@@ -1,5 +1,6 @@
 // Reference page: https://github.com/parse-community/Parse-SDK-Flutter
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
@@ -20,8 +21,10 @@ void main() async {
   //_setTargetPlatformForDesktop();
   // var channels = await getChannels();
   // print(channels);
-  deleteOldNotifications();
-  initializeNotifications();
+  if (!kIsWeb) {
+    deleteOldNotifications();
+    initializeNotifications();
+  }
 
   runApp(MaterialApp(
     title: 'Navigation Basics',

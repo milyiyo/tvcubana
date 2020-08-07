@@ -128,16 +128,16 @@ class NotificationButton extends StatefulWidget {
 class _NotificationButtonState extends State<NotificationButton> {
   @override
   Widget build(BuildContext context) {
-    if (DateTime.parse(
-            widget.programItem.dateStart + ' ' + widget.programItem.timeStart)
-        .isAfter(DateTime.now())) {
+    if (!kIsWeb &&
+        DateTime.parse(widget.programItem.dateStart +
+                ' ' +
+                widget.programItem.timeStart)
+            .isAfter(DateTime.now())) {
       if (existNotificationForProgram(widget.programItem.id)) {
         return FlatButton(
           onPressed: () {
             deleteNotification(widget.programItem.id);
-            setState(() {
-              
-            });
+            setState(() {});
           },
           child: Icon(
             Icons.notifications_active,
@@ -152,9 +152,7 @@ class _NotificationButtonState extends State<NotificationButton> {
                 widget.programItem.timeStart,
                 widget.programItem.title,
                 widget.channelName);
-            setState(() {
-              
-            });
+            setState(() {});
           },
           child: Icon(
             Icons.notifications_none,
