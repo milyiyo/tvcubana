@@ -29,7 +29,6 @@ dependencies:
   shared_preferences: ^0.5.7+3
   flutter_launcher_icons: ^0.7.5
   chips_choice: ^1.2.0
-  firebase_admob: ^0.9.3
   webview_flutter: ^0.3.22+1
   flutter_local_notifications: ^1.4.4+2
 
