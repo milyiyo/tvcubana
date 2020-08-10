@@ -347,5 +347,5 @@ Widget getImageForCategory(ProgramItem pitem) {
 
   print(categories);
 
-  return FlutterLogo(size: 72.0);
+  return Icon(Icons.live_tv, size: 50, color: Colors.lightBlue[400]);
 }

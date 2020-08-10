@@ -75,7 +75,7 @@ class ProgramItemCard extends StatelessWidget {
             children: [
               omdbPoster == null
                   ? new Container()
-                  : buildImageRounded(omdbPoster, context), //aqui
+                  : buildImageRounded(omdbPoster, context),
               omdbRating == null
                   ? new Container()
                   : Row(

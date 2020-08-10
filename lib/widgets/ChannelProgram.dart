@@ -81,13 +81,18 @@ class _ChannelProgramState extends State<ChannelProgram> {
               return ListView(
                 controller: scrollController,
                 children: (p == null || p.programItems.length == 0)
-                    ? [Image.asset('assets/images/noresult.jpg')]
+                    ? [noResultsFound()]
                     : <Widget>[
                         ...p.programItems.map(
                           (pitem) {
                             var shouldPositionTheScroll =
                                 currentProgram == pitem;
-                            return ProgramItemCard(shouldPositionTheScroll: shouldPositionTheScroll, stickyKey: stickyKey, programItem: pitem, iconWidget: getImageForCategory(pitem));
+                            return ProgramItemCard(
+                                shouldPositionTheScroll:
+                                    shouldPositionTheScroll,
+                                stickyKey: stickyKey,
+                                programItem: pitem,
+                                iconWidget: getImageForCategory(pitem));
                           },
                         ),
                       ],
@@ -97,5 +102,15 @@ class _ChannelProgramState extends State<ChannelProgram> {
         ),
       ),
     );
+  }
+
+  Widget noResultsFound() {
+    return ListView(
+        shrinkWrap: true,
+        padding: const EdgeInsets.all(200),
+        children: <Widget>[
+          Image.asset('images/icon_noresults.png'),
+          Text("No se encontraron resultados", textAlign: TextAlign.center)
+        ]);
   }
 }
