@@ -124,11 +124,11 @@ Future<List<Program>> getProgramFromURL(Channel channel) async {
     var date = firstDayOfWeek.add(new Duration(days: i));
     var dateStr = getStrDate(date);
 
-    var url = 'http://eprog2.tvcdigital.cu/programacion/${channel.id}/$date';
+    var url = 'http://eprog2.tvcdigital.cu/programacion/${channel.id}/$dateStr';
     var result = List<ProgramItem>();
     // Await the http get response, then decode the json-formatted response.
     var response = await http.get(url);
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 && !response.body.startsWith('{"solapamiento":{"eventos_solapados"')) {
       var jsonResponse = convert.jsonDecode(response.body);
       for (var pjson in jsonResponse) {
         result.add(new ProgramItem(
