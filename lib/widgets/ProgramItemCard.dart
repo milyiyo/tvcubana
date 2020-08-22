@@ -8,17 +8,18 @@ import 'package:tvcubana/widgets/ImdbPage.dart';
 import '../notifications.dart';
 
 class ProgramItemCard extends StatelessWidget {
-  ProgramItemCard({
-    Key key,
-    @required this.shouldPositionTheScroll,
-    @required this.stickyKey,
-    @required this.programItem,
-    @required this.iconWidget,
-    this.omdbPoster,
-    this.omdbRating,
-    this.imdbID,
-    this.channelName,
-  }) : super(key: key);
+  ProgramItemCard(
+      {Key key,
+      @required this.shouldPositionTheScroll,
+      @required this.stickyKey,
+      @required this.programItem,
+      @required this.iconWidget,
+      this.omdbPoster,
+      this.omdbRating,
+      this.imdbID,
+      this.channelName,
+      this.showDate = false})
+      : super(key: key);
 
   final bool shouldPositionTheScroll;
   final GlobalKey<State<StatefulWidget>> stickyKey;
@@ -28,6 +29,7 @@ class ProgramItemCard extends StatelessWidget {
   final String omdbRating;
   final String channelName;
   final String imdbID;
+  final bool showDate;
 
   Widget buildImageRounded(String url, BuildContext context) {
     return GestureDetector(
@@ -93,7 +95,7 @@ class ProgramItemCard extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: Text(
-                      '${programItem.timeStart} ${channelName == null ? '' : channelName}'),
+                      '${showDate ? programItem.dateStart:''} ${programItem.timeStart} ${channelName == null ? '' : channelName}'),
                 ),
               ),
               Container(
