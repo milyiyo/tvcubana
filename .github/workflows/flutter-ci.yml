@@ -28,6 +28,7 @@ jobs:
     
     - run: echo ${GOOGLE_SERVICE} > google-services.json
     - run: mv google-services.json ./android/app/
+    - run: cat android/app/google-services.json
 
     # Get flutter dependencies.
     - run: flutter pub get
