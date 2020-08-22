@@ -1,8 +1,10 @@
 import 'package:tvcubana/models/Channel.dart';
 import 'package:tvcubana/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:tvcubana/widgets/SearchPage.dart';
 
 import 'ChannelProgram.dart';
+import 'ImdbPage.dart';
 import 'MoviesList.dart';
 import 'ShortAgenda.dart';
 
@@ -15,6 +17,7 @@ class _TabBarDemoState extends State<TabBarDemo> {
   var channels = new List<Channel>();
   var isLoading = false;
   var bannerLoaded = false;
+  var isSearchActive = false;
 
   @override
   void initState() {
@@ -62,6 +65,15 @@ class _TabBarDemoState extends State<TabBarDemo> {
         ));
   }
 
+  void onChangeSearchTerm(String searchTerm) {
+    if (searchTerm.length > 0) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ImdbPage('')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -76,7 +88,38 @@ class _TabBarDemoState extends State<TabBarDemo> {
                 Tab(icon: Icon(Icons.view_agenda)),
               ],
             ),
-            title: Text('TVCubana'),
+            title: isSearchActive
+                ? TextField(
+                    style: TextStyle(color: Colors.white),
+                    decoration: InputDecoration(hintText: 'Texto a buscar'),
+                    onChanged: (value) => onChangeSearchTerm(value),
+                  )
+                : Text('TVCubana'),
+            actions: <Widget>[
+              // action button
+              if (isSearchActive)
+                IconButton(
+                  tooltip: 'Cancelar',
+                  icon: Icon(Icons.close),
+                  onPressed: () {
+                    setState(() {
+                      isSearchActive = false;
+                    });
+                  },
+                )
+              else
+                IconButton(
+                  tooltip: 'Buscar',
+                  icon: Icon(Icons.search),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SearchPage()),
+                    );
+                  },
+                ),
+              // overflow menu
+            ],
           ),
           floatingActionButton: Container(
             margin: EdgeInsets.only(bottom: bannerLoaded ? 40 : 0),
@@ -105,10 +148,11 @@ class _TabBarDemoState extends State<TabBarDemo> {
                             // horizontal, this produces 2 rows.
                             crossAxisCount:
                                 orientation == Orientation.portrait ? 2 : 4,
-                            // Generate 100 widgets that display their index in the List.
                             children: [
                               ...channels.map(
                                 (e) => Card(
+                                  // Clip the content outside the Card to avoid the image overflow
+                                  clipBehavior: Clip.antiAlias,
                                   child: GestureDetector(
                                     onTap: () {
                                       Navigator.push(
