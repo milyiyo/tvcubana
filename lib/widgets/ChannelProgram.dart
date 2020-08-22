@@ -105,12 +105,15 @@ class _ChannelProgramState extends State<ChannelProgram> {
   }
 
   Widget noResultsFound() {
-    return ListView(
-        shrinkWrap: true,
-        padding: const EdgeInsets.all(200),
+    var image = Image.asset('assets/images/icon_noresults.png');
+    return ListView(shrinkWrap: true,
         children: <Widget>[
-          Image.asset('images/icon_noresults.png'),
-          Text("No se encontraron resultados", textAlign: TextAlign.center)
+          image,
+          Text(
+            "No se encontraron resultados",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 20),
+          )
         ]);
   }
 }
