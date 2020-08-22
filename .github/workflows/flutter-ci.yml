@@ -37,6 +37,9 @@ jobs:
     
     # Run widget tests for our flutter project.
     #- run: flutter test
+
+    - run: echo ${GOOGLE_SERVICE} > google-services.json
+    - run: pwd
     
     # Build apk.
     - run: flutter build apk
