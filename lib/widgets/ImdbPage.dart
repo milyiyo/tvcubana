@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class ImdbPage extends StatefulWidget {
-  String imdbId;
+  final String imdbId;
   ImdbPage(this.imdbId);
 
   @override

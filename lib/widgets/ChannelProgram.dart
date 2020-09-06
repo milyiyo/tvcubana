@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'ProgramItemCard.dart';
 
 class ChannelProgram extends StatefulWidget {
-  Channel channel;
+  final Channel channel;
   ChannelProgram(this.channel);
 
   @override
