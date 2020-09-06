@@ -8,12 +8,12 @@ import 'package:chips_choice/chips_choice.dart';
 
 import 'ProgramItemCard.dart';
 
-class MoviesList extends StatefulWidget {
+class CategoriesList extends StatefulWidget {
   @override
-  _MoviesListState createState() => _MoviesListState();
+  _CategoriesListState createState() => _CategoriesListState();
 }
 
-class _MoviesListState extends State<MoviesList> {
+class _CategoriesListState extends State<CategoriesList> {
   var movies = new List();
   var isLoading = false;
 
@@ -39,68 +39,8 @@ class _MoviesListState extends State<MoviesList> {
                       (isSports(programItem) && sportsIsSeleted()) ||
                       (isNews(programItem) && newsIsSeleted()) ||
                       (isDocumental(programItem) && documentalsIsSeleted()))) {
-                String searchString = programItem.title.toLowerCase() +
-                    ' & ' +
-                    programItem.descriptionLong.toLowerCase();
-
-                var exps = [
-                  new RegExp(r"tiempo\sde\scine:\s([0-9a-z :]*)"),
-                  new RegExp(r"multicine:\s([a-z0-9 :]*)"),
-                  new RegExp(r"domingo en casa:\s([A-Za-z0-9 :]*)"),
-                  new RegExp(r"filmecito:\s([a-z ñáéíóú:]*)"),
-                  new RegExp(r"filme:\s([A-Za-z áéíóú:]*)"),
-                  new RegExp(r"minicinema:\s([a-z :]*)"),
-                  new RegExp(r"directores\sen\sacción:(\s)*([A-Za-z :]*)"),
-                  new RegExp(r"ellas\sy\sellos:(\s)*([A-Za-z :]*)"),
-                  new RegExp(r"cine\sde\saventuras:\s([a-z :]*)"),
-                  new RegExp(r"cinema\sjoven:\s([a-z :]*)"),
-                  new RegExp(r"algo\spara\srecordar:\s([a-z :]*)"),
-                  new RegExp(r"t[i-í]tulo\soriginal:\s([a-z :]*)"),
-                  new RegExp(r"t[i-í]tulo\soriginal\s([a-z :]*)"),
-                  new RegExp(r"\w*t[i-í]tulo\soriginal:\s([a-z -\s1]*)"),
-                  new RegExp(
-                      r"&\s[a-z -ó2]*\st[i-í]tulo\soriginal:([a-z :\s0-9]*)"),
-                  new RegExp(r"([a-z ]*).\sTítulo\soriginal"),
-                  new RegExp(r"([a-z -ó2]*)\s\(titulo\soriginal\)"),
-                  new RegExp(r"([a-z -ó2]*).\stítulo\soriginal"),
-                  new RegExp(r"([a-z -ó2]*)\stítulo\soriginal"),
-                  new RegExp(r"&\s([a-z -ó2]*)\stítulo\soriginal"),
-                  new RegExp(r"título\sen\sidioma\soriginal:\s([a-z :]*)"),
-                  new RegExp(r"([a-z -]*).\stítulo\sen\sespañol"),
-                  new RegExp(r"titulo\soriginal\s:\s([a-z :\s]*)"),
-                  new RegExp(r"&[a-z áéíóú]*\(([a-z ]*)\)"),
-                ];
-                RegExpMatch match;
-
-                for (var exp in exps) {
-                  match = exp.firstMatch(searchString);
-                  if (match != null) break;
-                }
-
-                if (match == null &&
-                    programItem.title.startsWith('Filmecito:')) {}
-
-                Map<String, String> omdb = {};
-                if (match != null) {
-                  var title = match.group(1).trim();
-                  print(title);
-                  var url = 'http://www.omdbapi.com/?apikey=c161b4d4&t=$title';
-                  try {
-                    var response = await http.get(url);
-                    if (response.statusCode == 200) {
-                      var jsonResponse = convert.jsonDecode(response.body);
-                      omdb['imdbID'] = jsonResponse['imdbID'];
-                      omdb['poster'] = jsonResponse['Poster'];
-                      omdb['imdbRating'] = jsonResponse['imdbRating'];
-                      if (omdb['poster'] == 'N/A' ||
-                          omdb['imdbRating'] == 'N/A') omdb = {};
-                      print('$title $omdb');
-                    }
-                  } catch (e) {}
-                }
-
                 setState(() {
-                  movies.add([channel, programItem, omdb]);
+                  movies.add([channel, programItem, null]);
                   movies.sort((a, b) {
                     var programA = (a[1] as ProgramItem);
                     var date0 = DateTime.parse(
@@ -113,6 +53,15 @@ class _MoviesListState extends State<MoviesList> {
                     return date0.compareTo(date1);
                   });
                   isLoading = false;
+                });
+
+                getOMDBData(programItem).then((omdb) {
+                  if (omdb == {}) return;
+                  setState(() {
+                    var idx = movies.indexWhere((element) =>
+                        (element[1] as ProgramItem).id == programItem.id);
+                    if (idx >= 0) movies[idx][2] = omdb;
+                  });
                 });
               }
             });
@@ -198,14 +147,23 @@ class _MoviesListState extends State<MoviesList> {
                         var channel = (e[0] as Channel);
                         var programItem = (e[1] as ProgramItem);
                         var omdb = (e[2] as Map<String, String>);
+
+                        if (omdb == null)
+                          return ProgramItemCard(
+                              shouldPositionTheScroll: false,
+                              stickyKey: null,
+                              programItem: programItem,
+                              iconWidget: getImageForChannel(channel.name, 50),
+                              channelName: channel.name);
+
                         return ProgramItemCard(
                             shouldPositionTheScroll: false,
                             stickyKey: null,
                             programItem: programItem,
-                            iconWidget: getImageForChannel(channel.name, 50),
                             omdbPoster: omdb['poster'],
                             omdbRating: omdb['imdbRating'],
                             imdbID: omdb['imdbID'],
+                            iconWidget: getImageForChannel(channel.name, 50),
                             channelName: channel.name);
                       }),
                       new Container(margin: EdgeInsets.symmetric(vertical: 40))
@@ -216,54 +174,4 @@ class _MoviesListState extends State<MoviesList> {
       ),
     );
   }
-}
-
-bool isToday(ProgramItem programItem) {
-  var today = new DateTime.now();
-  var todayStr =
-      '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
-  return programItem.dateStart == todayStr;
-}
-
-bool isMovie(ProgramItem programItem) {
-  var text = programItem.classification.join(',');
-  return text.contains('Cine') ||
-      text.contains('Pelicula') ||
-      text.contains('filme');
-}
-
-bool isSerie(ProgramItem programItem) {
-  var text = programItem.classification.join(',');
-  return text.contains('Seri');
-}
-
-bool isNews(ProgramItem programItem) {
-  var text = programItem.classification.join(',');
-  return text.contains('Notici') ||
-      text.contains('Telediario') ||
-      text.contains('Revista') ||
-      text.contains('Debate') ||
-      text.contains('Boletin') ||
-      text.contains('Opinión') ||
-      text.contains('Entrevista') ||
-      text.contains('Reportaje') ||
-      text.contains('Emision especial') ||
-      text.contains('Informativo');
-}
-
-bool isDocumental(ProgramItem programItem) {
-  var text = programItem.classification.join(',');
-  return text.contains('Documental');
-}
-
-bool isSports(ProgramItem programItem) {
-  var text = programItem.classification.join(',');
-  return text.contains('Deport');
-}
-
-bool isMusic(ProgramItem programItem) {
-  var text = programItem.classification.join(',');
-  return text.contains('Musical') ||
-      text.contains('Concierto') ||
-      text.contains('Espectaculo');
 }

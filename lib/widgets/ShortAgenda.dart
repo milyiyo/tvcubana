@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:tvcubana/models/Channel.dart';
 import 'package:tvcubana/models/ProgramItem.dart';
 import 'package:tvcubana/widgets/ProgramItemCard.dart';
-
 import '../utils.dart';
 
 class ShortAgenda extends StatefulWidget {
@@ -37,7 +36,7 @@ class _ShortAgendaState extends State<ShortAgenda> {
     isLoading = true;
     getChannels(false).then((channels) => getAgendaData(channels, todayStr));
 
-    timer = new Timer.periodic(new Duration(seconds: 5), (Timer t) {
+    timer = new Timer.periodic(new Duration(seconds: 60), (Timer t) {
       getChannels(false).then((channels) => getAgendaData(channels, todayStr));
     });
   }
@@ -48,7 +47,7 @@ class _ShortAgendaState extends State<ShortAgenda> {
     timer.cancel();
   }
 
-  getAgendaData(List<Channel> channels, String todayStr) {
+  void getAgendaData(List<Channel> channels, String todayStr) {
     storedData = {'date': '', 'channelCurrentProg': [], 'channelNextProg': []};
 
     for (var i = 0; i < channels.length; i++) {
@@ -76,6 +75,20 @@ class _ShortAgendaState extends State<ShortAgenda> {
             storedData['channelNextProg'] = storedData['channelNextProg'];
             isLoading = false;
           });
+
+        [storedData['channelCurrentProg'], storedData['channelNextProg']]
+            .forEach((e) {
+          for (var item in (e as List)) {
+            var pI = item['programItem'];
+            getOMDBData(pI).then((omdb) {
+              if (omdb == {} || !mounted) return;
+
+              setState(() {
+                item['omdb'] = omdb;
+              });
+            });
+          }
+        });
       });
     }
   }
@@ -103,8 +116,21 @@ class _ShortAgendaState extends State<ShortAgenda> {
     return collection.map((e) {
       var channel = e['channel'] as Channel;
       var programItem = e['programItem'] as ProgramItem;
+      var omdb = e['omdb'] as Map<String, String>;
 
-      return ProgramItemCard(shouldPositionTheScroll: false, stickyKey: null, programItem: programItem, iconWidget: getImageForChannel(channel.name, 50));
+      var result = ProgramItemCard(
+          shouldPositionTheScroll: false,
+          stickyKey: null,
+          programItem: programItem,
+          iconWidget: getImageForChannel(channel.name, 50));
+
+      if (omdb != null) {
+        result.omdbPoster = omdb['poster'];
+        result.omdbRating = omdb['imdbRating'];
+        result.imdbID = omdb['imdbID'];
+      }
+
+      return result;
     }).toList();
   }
 

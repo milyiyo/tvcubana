@@ -25,10 +25,10 @@ class ProgramItemCard extends StatelessWidget {
   final GlobalKey<State<StatefulWidget>> stickyKey;
   final ProgramItem programItem;
   final Widget iconWidget;
-  final String omdbPoster;
-  final String omdbRating;
+  String omdbPoster;
+  String omdbRating;
   final String channelName;
-  final String imdbID;
+  String imdbID;
   final bool showDate;
 
   Widget buildImageRounded(String url, BuildContext context) {

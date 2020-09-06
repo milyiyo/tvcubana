@@ -83,9 +83,9 @@ class _TabBarDemoState extends State<TabBarDemo> {
           appBar: AppBar(
             bottom: TabBar(
               tabs: [
-                Tab(icon: Icon(Icons.access_time)),
-                Tab(icon: Icon(Icons.category)),
-                Tab(icon: Icon(Icons.view_agenda)),
+                Tab(text: 'Ahora'),
+                Tab(text: 'Categorías'),
+                Tab(text: 'Canales'),
               ],
             ),
             title: isSearchActive
@@ -135,6 +135,8 @@ class _TabBarDemoState extends State<TabBarDemo> {
             builder: (BuildContext context, AsyncSnapshot<void> snapshot) =>
                 TabBarView(
               children: [
+                ShortAgenda(),
+                CategoriesList(),
                 isLoading
                     ? Center(
                         child: Padding(
@@ -185,8 +187,6 @@ class _TabBarDemoState extends State<TabBarDemo> {
                           );
                         },
                       ),
-                MoviesList(),
-                ShortAgenda(),
               ],
             ),
           ),
