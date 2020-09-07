@@ -3,6 +3,7 @@ import 'package:tvcubana/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:tvcubana/widgets/SearchPage.dart';
 
+import '../infrastructure/ICRTService.dart';
 import 'ChannelProgram.dart';
 import 'ImdbPage.dart';
 import 'MoviesList.dart';
@@ -24,7 +25,7 @@ class _TabBarDemoState extends State<TabBarDemo> {
     super.initState();
 
     isLoading = true;
-    getChannels(false).then((value) {
+    ICRTService.getChannels(false).then((value) {
       if (mounted) {
         channels = value.where((element) => element.name != null).toList();
         setState(() {
@@ -39,9 +40,9 @@ class _TabBarDemoState extends State<TabBarDemo> {
       isLoading = true;
     });
 
-    getChannels(true).then((channels) {
+    ICRTService.getChannels(true).then((channels) {
       for (var i = 0; i < channels.length; i++) {
-        getProgram(channels[i], true).then((programs) {
+        ICRTService.getProgram(channels[i], true).then((programs) {
           if (i == channels.length - 1)
             setState(() {
               isLoading = false;
@@ -49,20 +50,6 @@ class _TabBarDemoState extends State<TabBarDemo> {
         });
       }
     });
-  }
-
-  getImageForChannel(String channelName) {
-    var images = getChannelImages();
-    if (images.containsKey(channelName)) {
-      return Image.asset(images[channelName], height: 100, width: 100);
-    }
-    return Container(
-        margin: EdgeInsets.only(top: 10),
-        child: Icon(
-          Icons.live_tv,
-          size: 50,
-          color: Colors.lightBlue[200],
-        ));
   }
 
   void onChangeSearchTerm(String searchTerm) {
@@ -176,7 +163,7 @@ class _TabBarDemoState extends State<TabBarDemo> {
                                           ),
                                           subtitle: Text('${e.description}.'),
                                         ),
-                                        getImageForChannel(e.name),
+                                        getImageForChannel(e.name, 100),
                                       ],
                                     ),
                                   ),

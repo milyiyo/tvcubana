@@ -3,6 +3,7 @@ import 'package:tvcubana/models/Channel.dart';
 import 'package:tvcubana/models/ProgramItem.dart';
 import 'package:tvcubana/widgets/ProgramItemCard.dart';
 
+import '../infrastructure/ICRTService.dart';
 import '../utils.dart';
 
 class SearchPage extends StatefulWidget {
@@ -25,9 +26,9 @@ class _SearchPageState extends State<SearchPage> {
 
   void chargeList() {
     _programs.clear();
-    getChannels(false).then((channels) {
+    ICRTService.getChannels(false).then((channels) {
       channels.forEach((channel) {
-        getProgram(channel, false).then((programs) {
+        ICRTService.getProgram(channel, false).then((programs) {
           programs.forEach((program) {
             program.programItems.forEach((programItem) async {
               setState(() {

@@ -4,6 +4,8 @@ import 'package:tvcubana/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:chips_choice/chips_choice.dart';
 
+import '../infrastructure/ICRTService.dart';
+import '../infrastructure/OMDBService.dart';
 import 'ProgramItemCard.dart';
 
 class CategoriesList extends StatefulWidget {
@@ -24,19 +26,19 @@ class _CategoriesListState extends State<CategoriesList> {
 
   void chargeList() {
     movies.clear();
-    getChannels(false).then((channels) {
+    ICRTService.getChannels(false).then((channels) {
       channels.forEach((channel) {
-        getProgram(channel, false).then((programs) {
+        ICRTService.getProgram(channel, false).then((programs) {
           programs.forEach((program) {
             program.programItems.forEach((programItem) async {
-              if (isToday(programItem) &&
+              if (programItem.isToday() &&
                   mounted &&
-                  ((isMovie(programItem) && moviesIsSeleted()) ||
-                      (isSerie(programItem) && seriesIsSeleted()) ||
-                      (isMusic(programItem) && musicIsSeleted()) ||
-                      (isSports(programItem) && sportsIsSeleted()) ||
-                      (isNews(programItem) && newsIsSeleted()) ||
-                      (isDocumental(programItem) && documentalsIsSeleted()))) {
+                  ((programItem.isMovie() && moviesIsSeleted()) ||
+                      (programItem.isSerie() && seriesIsSeleted()) ||
+                      (programItem.isMusic() && musicIsSeleted()) ||
+                      (programItem.isSports() && sportsIsSeleted()) ||
+                      (programItem.isNews() && newsIsSeleted()) ||
+                      (programItem.isDocumental() && documentalsIsSeleted()))) {
                 setState(() {
                   movies.add([channel, programItem, null]);
                   movies.sort((a, b) {
@@ -53,7 +55,7 @@ class _CategoriesListState extends State<CategoriesList> {
                   isLoading = false;
                 });
 
-                getOMDBData(programItem).then((omdb) {
+                OMDBService.getOMDBData(programItem).then((omdb) {
                   if (omdb == {}) return;
                   setState(() {
                     var idx = movies.indexWhere((element) =>

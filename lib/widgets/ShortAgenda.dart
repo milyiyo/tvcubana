@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:tvcubana/models/Channel.dart';
 import 'package:tvcubana/models/ProgramItem.dart';
 import 'package:tvcubana/widgets/ProgramItemCard.dart';
+import '../infrastructure/ICRTService.dart';
+import '../infrastructure/OMDBService.dart';
 import '../utils.dart';
 
 class ShortAgenda extends StatefulWidget {
@@ -34,10 +36,10 @@ class _ShortAgendaState extends State<ShortAgenda> {
 
     storedData['date'] = todayStr;
     isLoading = true;
-    getChannels(false).then((channels) => getAgendaData(channels, todayStr));
+    ICRTService.getChannels(false).then((channels) => getAgendaData(channels, todayStr));
 
     timer = new Timer.periodic(new Duration(seconds: 60), (Timer t) {
-      getChannels(false).then((channels) => getAgendaData(channels, todayStr));
+      ICRTService.getChannels(false).then((channels) => getAgendaData(channels, todayStr));
     });
   }
 
@@ -52,7 +54,7 @@ class _ShortAgendaState extends State<ShortAgenda> {
 
     for (var i = 0; i < channels.length; i++) {
       var channel = channels[i];
-      getProgram(channel, false).then((programs) {
+      ICRTService.getProgram(channel, false).then((programs) {
         var program =
             programs.firstWhere((p) => p.date == todayStr, orElse: () => null);
         if (program == null) return;
@@ -80,7 +82,7 @@ class _ShortAgendaState extends State<ShortAgenda> {
             .forEach((e) {
           for (var item in (e as List)) {
             var pI = item['programItem'];
-            getOMDBData(pI).then((omdb) {
+            OMDBService.getOMDBData(pI).then((omdb) {
               if (omdb == {} || !mounted) return;
 
               setState(() {

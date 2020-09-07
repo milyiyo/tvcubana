@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:tvcubana/models/Channel.dart';
 import 'package:tvcubana/models/Program.dart';
 
+import '../infrastructure/ICRTService.dart';
 import '../utils.dart';
 import 'package:flutter/material.dart';
 
@@ -28,13 +29,13 @@ class _ChannelProgramState extends State<ChannelProgram> {
   void initState() {
     super.initState();
 
-    getProgram(widget.channel, false).then((value) => setState(() {
+    ICRTService.getProgram(widget.channel, false).then((value) => setState(() {
           programs = value;
         }));
   }
 
   void reloadData() {
-    getProgram(widget.channel, true).then((value) => setState(() {
+    ICRTService.getProgram(widget.channel, true).then((value) => setState(() {
           programs = value;
         }));
   }
