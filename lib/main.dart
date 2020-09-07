@@ -7,7 +7,7 @@ import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'dart:convert';
 
 import 'models/Channel.dart';
-import 'widgets/TabBarDemo.dart';
+import 'widgets/TabBarApp.dart';
 import 'notifications.dart';
 
 const String PARSE_APP_ID = 'Fy0qjfqDevGKQPT5XaANnq9EbQ1EbP2OtiQzhwWV';
@@ -28,7 +28,7 @@ void main() async {
 
   runApp(MaterialApp(
     title: 'Navigation Basics',
-    home: TabBarDemo(),
+    home: TabBarApp(),
   ));
 }
 

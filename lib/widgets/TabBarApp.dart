@@ -9,12 +9,12 @@ import 'ImdbPage.dart';
 import 'MoviesList.dart';
 import 'ShortAgenda.dart';
 
-class TabBarDemo extends StatefulWidget {
+class TabBarApp extends StatefulWidget {
   @override
-  _TabBarDemoState createState() => _TabBarDemoState();
+  _TabBarAppState createState() => _TabBarAppState();
 }
 
-class _TabBarDemoState extends State<TabBarDemo> {
+class _TabBarAppState extends State<TabBarApp> {
   var channels = new List<Channel>();
   var isLoading = false;
   var bannerLoaded = false;
