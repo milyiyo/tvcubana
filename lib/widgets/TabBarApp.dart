@@ -1,6 +1,7 @@
 import 'package:tvcubana/models/Channel.dart';
 import 'package:tvcubana/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:tvcubana/widgets/ConfigPage.dart';
 import 'package:tvcubana/widgets/SearchPage.dart';
 
 import '../infrastructure/ICRTService.dart';
@@ -102,6 +103,16 @@ class _TabBarAppState extends State<TabBarApp> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => SearchPage()),
+                    );
+                  },
+                ),
+                IconButton(
+                  tooltip: 'Configuración',
+                  icon: Icon(Icons.settings),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ConfigPage()),
                     );
                   },
                 ),
