@@ -3,9 +3,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
+import 'package:provider/provider.dart';
 
 import 'dart:convert';
 
+import 'ShowImdbImages.dart';
 import 'models/Channel.dart';
 import 'widgets/TabBarApp.dart';
 import 'notifications.dart';
@@ -26,9 +28,14 @@ void main() async {
     initializeNotifications();
   }
 
-  runApp(MaterialApp(
-    title: 'Navigation Basics',
-    home: TabBarApp(),
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_) => ShowImdbImages()),
+    ],
+    child: MaterialApp(
+      title: 'Navigation Basics',
+      home: TabBarApp(),
+    ),
   ));
 }
 

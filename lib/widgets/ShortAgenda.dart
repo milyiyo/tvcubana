@@ -140,6 +140,7 @@ class _ShortAgendaState extends State<ShortAgenda> {
   Widget build(BuildContext context) {
     var channelCurrentProg = storedData['channelCurrentProg'] as List;
     var channelNextProg = storedData['channelNextProg'] as List;
+    // context.watch<ShowImdbImages>().showImdbImages;
     return ListView(children: [
       Column(
         children: isLoading

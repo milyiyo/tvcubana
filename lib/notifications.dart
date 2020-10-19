@@ -11,20 +11,27 @@ class Notification {
   String programItemId;
   String dateStart;
   String timeStart;
+  String channelName;
+  String programTitle;
 
-  Notification(this.id, this.programItemId, this.dateStart, this.timeStart);
+  Notification(this.id, this.programItemId, this.dateStart, this.timeStart,
+      this.channelName, this.programTitle);
 
   Notification.fromJson(Map<String, dynamic> pjson)
       : id = pjson['id'],
         programItemId = pjson['programItemId'],
         dateStart = pjson['dateStart'],
-        timeStart = pjson['timeStart'];
+        timeStart = pjson['timeStart'],
+        channelName = pjson['channelName'],
+        programTitle = pjson['programTitle'];
 
   Map<String, dynamic> toJson() => {
         'id': id,
         'programItemId': programItemId,
         'dateStart': dateStart,
         'timeStart': timeStart,
+        'channelName': channelName,
+        'programTitle': programTitle,
       };
 }
 
@@ -36,18 +43,37 @@ bool existNotificationForProgram(String programId) {
       -1;
 }
 
+Future<int> retrieveMinutesBeforeFromCache() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  var minutesBefore = prefs.getInt('minutesBefore');
+  if (minutesBefore == null) {
+    //by default minutesBefore for Notifications is 10
+    prefs.setInt('minutesBefore', 10);
+    minutesBefore = 10;
+  } 
+  return minutesBefore;
+}
+
+void storeMinutesBefore(int minutes) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setInt('minutesBefore', minutes);
+}
+
 var randomInt = new Random();
 
 void addNotification(String programItemId, String dateStart, String timeStart,
     String programTitle, String channelName) async {
   int id = randomInt.nextInt(1000);
   notifications = await retrieveNotificationsFromCache();
-  notifications.add(Notification(id, programItemId, dateStart, timeStart));
+  notifications.add(Notification(
+      id, programItemId, dateStart, timeStart, channelName, programTitle));
   storeNotificationsInCache(notifications);
+  int minutesBefore = await retrieveMinutesBeforeFromCache();
 
   var chanName = channelName == null ? '' : 'Por ' + channelName;
+    var textMinutes = minutesBefore == 0 ? ' ahora!' : ' en ' + minutesBefore.toString() + ' minutos.';
   scheduleNotification(id, DateTime.parse('$dateStart $timeStart'),
-      programTitle, '$chanName en 10 minutos.');
+      programTitle, chanName + textMinutes);
 }
 
 void deleteNotification(String programItemId) async {
@@ -106,7 +132,8 @@ FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 Future<void> initializeNotifications() async {
   flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
 
-  var initializationSettingsAndroid = new AndroidInitializationSettings('icon_notif');
+  var initializationSettingsAndroid =
+      new AndroidInitializationSettings('icon_notif');
 
   var initializationSettings =
       InitializationSettings(initializationSettingsAndroid, null);
@@ -115,8 +142,8 @@ Future<void> initializeNotifications() async {
       onSelectNotification: (payload) => null);
 }
 
-void scheduleNotification(
-    int id, DateTime dateTime, String title, String body) {
+Future<void> scheduleNotification(
+    int id, DateTime dateTime, String title, String body) async {
   var vibrationPattern = Int64List(4);
   vibrationPattern[0] = 0;
   vibrationPattern[1] = 1000;
@@ -140,8 +167,9 @@ void scheduleNotification(
   var platformChannelSpecifics =
       NotificationDetails(androidPlatformChannelSpecifics, null);
 
+  int minutesBefore = await retrieveMinutesBeforeFromCache();
   var scheduledNotificationDateTime =
-      dateTime.subtract(new Duration(minutes: 10));
+      dateTime.subtract(new Duration(minutes: minutesBefore));
 
   flutterLocalNotificationsPlugin
       .schedule(id, title, body, scheduledNotificationDateTime,
@@ -159,4 +187,21 @@ void scheduleNotification(
 
 void removeSchedNotification(int idNotification) {
   flutterLocalNotificationsPlugin.cancel(idNotification);
+}
+
+void reScheduleNotifications(int minsBefore) async {
+  print('re-scheduling notifications...');
+  storeMinutesBefore(minsBefore);
+  notifications = await retrieveNotificationsFromCache();
+  notifications.map((e) => removeSchedNotification(e.id));
+  notifications.map((e) {
+    print('re-scheduling ' + e.programTitle);
+    var chanName = e.channelName == null ? '' : 'Por ' + e.channelName;
+    var textMinutes = minsBefore == 0 ? ' ahora!' : ' en ' + minsBefore.toString() + ' minutos.';
+    scheduleNotification(
+        e.id,
+        DateTime.parse('${e.dateStart} ${e.timeStart}'),
+        e.programTitle,
+        chanName + textMinutes);
+  });
 }

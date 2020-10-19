@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:tvcubana/models/Channel.dart';
 import 'package:tvcubana/utils.dart';
 import 'package:flutter/material.dart';
@@ -106,16 +107,16 @@ class _TabBarAppState extends State<TabBarApp> {
                     );
                   },
                 ),
-                IconButton(
-                  tooltip: 'Configuración',
-                  icon: Icon(Icons.settings),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ConfigPage()),
-                    );
-                  },
-                ),
+              IconButton(
+                tooltip: 'Configuración',
+                icon: Icon(Icons.settings),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ConfigPage()),
+                  );
+                },
+              ),
               // overflow menu
             ],
           ),
