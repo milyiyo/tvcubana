@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tvcubana/notifications.dart';
+import 'package:package_info/package_info.dart';
 
 import '../ShowImdbImages.dart';
 import '../infrastructure/CacheManager.dart';
@@ -142,7 +145,7 @@ class _ConfigPageState extends State<ConfigPage> {
                     ],
                   ),
                 ),
-                Text('\nVersión: 1.0.2'),
+                Text('\nVersión: ${_getVersionNumber()}'),
               ],
             ),
           ),
@@ -157,6 +160,17 @@ class _ConfigPageState extends State<ConfigPage> {
         );
       },
     );
+  }
+
+  Future<String> _getVersionNumber() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    return packageInfo.version;
+    
+    // Other data you can get:
+    //
+    // 	String appName = packageInfo.appName;
+    // 	String packageName = packageInfo.packageName;
+    //	String buildNumber = packageInfo.buildNumber;
   }
 
   @override
