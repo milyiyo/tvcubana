@@ -191,7 +191,7 @@ void removeSchedNotification(int idNotification) {
 
 void reScheduleNotifications(int minsBefore) async {
   print('re-scheduling notifications...');
-  storeMinutesBefore(minsBefore);
+  // storeMinutesBefore(minsBefore);
   notifications = await retrieveNotificationsFromCache();
   notifications.map((e) => removeSchedNotification(e.id));
   notifications.map((e) {

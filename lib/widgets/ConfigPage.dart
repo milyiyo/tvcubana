@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tvcubana/notifications.dart';
@@ -39,51 +37,29 @@ class _ConfigPageState extends State<ConfigPage> {
     return new FutureBuilder<int>(
       future: retrieveMinutesBeforeFromCache(), // a Future<int> or null
       builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-        switch (snapshot.connectionState) {
-          case ConnectionState.none:
-            return new TouchSpin(
-              value: snapshot.data,
-              min: 0,
-              max: 60,
-              step: 5,
-              // displayFormat:
-              //     NumberFormat.currency(locale: 'en_US', symbol: '\$'),
-              textStyle: TextStyle(fontSize: 24),
-              iconSize: 24.0,
-              addIcon: Icon(Icons.add_circle_outline),
-              subtractIcon: Icon(Icons.remove_circle_outline),
-              iconActiveColor: Colors.blue[500],
-              iconDisabledColor: Colors.blueGrey[100],
-              iconPadding: EdgeInsets.all(20),
-              onChanged: (val) {
-                minutes = val;
-                storeMinutesBefore(val);
-              },
-              enabled: true,
-            );
-          // case ConnectionState.waiting: return new Text('Awaiting result...');
-          default:
-            return new TouchSpin(
-              value: 10,
-              min: 0,
-              max: 60,
-              step: 5,
-              // displayFormat:
-              //     NumberFormat.currency(locale: 'en_US', symbol: '\$'),
-              textStyle: TextStyle(fontSize: 24),
-              iconSize: 36.0,
-              addIcon: Icon(Icons.add_circle_outline),
-              subtractIcon: Icon(Icons.remove_circle_outline),
-              iconActiveColor: Colors.blue[500],
-              iconDisabledColor: Colors.blueGrey[100],
-              iconPadding: EdgeInsets.all(20),
-              onChanged: (val) {
-                minutes = val;
-                storeMinutesBefore(val);
-              },
-              enabled: true,
-            );
+        if (snapshot.hasData) {
+          return new TouchSpin(
+            value: snapshot.data,
+            min: 0,
+            max: 60,
+            step: 5,
+            // displayFormat:
+            //     NumberFormat.currency(locale: 'en_US', symbol: '\$'),
+            textStyle: TextStyle(fontSize: 24),
+            iconSize: 36.0,
+            addIcon: Icon(Icons.add_circle_outline),
+            subtractIcon: Icon(Icons.remove_circle_outline),
+            iconActiveColor: Colors.blue[500],
+            iconDisabledColor: Colors.blueGrey[100],
+            iconPadding: EdgeInsets.all(10),
+            onChanged: (val) {
+              minutes = val;
+              storeMinutesBefore(val);
+            },
+            enabled: true,
+          );
         }
+        return CircularProgressIndicator();
       },
     );
   }
@@ -107,18 +83,12 @@ class _ConfigPageState extends State<ConfigPage> {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text(
-                    'Esta aplicación ha sido desarrollada por:\n',
-                    style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18)
-                    ),
+                Text('Esta aplicación ha sido desarrollada por:\n',
+                    style: TextStyle(color: Colors.black, fontSize: 18)),
                 RichText(
                   text: TextSpan(
                     text: ' - Alberto Carmona Barthelemy: ',
-                    style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18),
+                    style: TextStyle(color: Colors.black, fontSize: 18),
                     children: <TextSpan>[
                       TextSpan(
                           text: 'milyiyo@gmail.com',
@@ -132,9 +102,7 @@ class _ConfigPageState extends State<ConfigPage> {
                 RichText(
                   text: TextSpan(
                     text: ' - Marisel Torres Martínez: ',
-                    style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18),
+                    style: TextStyle(color: Colors.black, fontSize: 18),
                     children: <TextSpan>[
                       TextSpan(
                           text: 'mtorresm911025@gmail.com',
@@ -165,7 +133,7 @@ class _ConfigPageState extends State<ConfigPage> {
   Future<String> _getVersionNumber() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     return packageInfo.version;
-    
+
     // Other data you can get:
     //
     // 	String appName = packageInfo.appName;
@@ -192,19 +160,23 @@ class _ConfigPageState extends State<ConfigPage> {
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Notificaciones: ',
-                      style: TextStyle(height: 5, fontSize: 18)),
+                  Column(
+                    children: [
+                      Text('Notificaciones: ',
+                          style: TextStyle(height: 2, fontSize: 18)),
+                      Text('(minutos antes)',
+                          style: TextStyle(height: 1, fontSize: 14))
+                    ],
+                  ),
                   Flexible(
                       child: Row(children: [
-                    Expanded(flex: 2, child: Container()),
-                    spinMinutesBefore(),
-                    Text(' minutos antes. ',
-                        style: TextStyle(height: 5, fontSize: 16)),
+                    Expanded(flex: 1, child: Container()),
+                    spinMinutesBefore()
                   ]))
                 ],
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 0),
+                padding: EdgeInsets.symmetric(horizontal: 0, vertical: 10),
                 child: Container(
                   height: 1.0,
                   width: 130.0,
@@ -215,34 +187,44 @@ class _ConfigPageState extends State<ConfigPage> {
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Mostrar imágenes (películas)',
-                      style: TextStyle(height: 5, fontSize: 18)),
-                  hasResult
-                      ? LiteRollingSwitch(
-                          value: showImages,
-                          textSize: 18,
-                          textOn: 'Sí',
-                          textOff: 'No',
-                          colorOn: Colors.blue[500],
-                          colorOff: Colors.blueGrey[100],
-                          iconOn: Icons.thumb_up,
-                          iconOff: Icons.thumb_down,
-                          onChanged: (bool state) {
-                            if (hasResult) {
-                              CacheManager.storeShowImages(state);
-                              // context.read<ShowImdbImages>().setShowImdbImages(state);
-                              if (showImages != state)
-                                Provider.of<ShowImdbImages>(context,
-                                        listen: false)
-                                    .setShowImdbImages(state);
-                            }
-                          },
-                        )
-                      : Container()
+                  Column(
+                    children: [
+                      Text('Mostrar posters: ',
+                          style: TextStyle(height: 2, fontSize: 18)),
+                      Text('(películas)',
+                          style: TextStyle(height: 1, fontSize: 14))
+                    ],
+                  ),
+                  Flexible(
+                      child: Row(children: [
+                    Expanded(flex: 1, child: Container()),
+                    hasResult
+                        ? LiteRollingSwitch(
+                            value: showImages,
+                            textSize: 18,
+                            textOn: 'Sí',
+                            textOff: 'No',
+                            colorOn: Colors.blue[500],
+                            colorOff: Colors.blueGrey[100],
+                            iconOn: Icons.thumb_up,
+                            iconOff: Icons.thumb_down,
+                            onChanged: (bool state) {
+                              if (hasResult) {
+                                CacheManager.storeShowImages(state);
+                                // context.read<ShowImdbImages>().setShowImdbImages(state);
+                                if (showImages != state)
+                                  Provider.of<ShowImdbImages>(context,
+                                          listen: false)
+                                      .setShowImdbImages(state);
+                              }
+                            },
+                          )
+                        : Container()
+                  ]))
                 ],
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 0),
+                padding: EdgeInsets.symmetric(horizontal: 0, vertical: 10),
                 child: Container(
                   height: 1.0,
                   width: 130.0,
