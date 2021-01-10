@@ -19,7 +19,6 @@ class ConfigPage extends StatefulWidget {
 class _ConfigPageState extends State<ConfigPage> {
   bool showImages = false;
   bool hasResult = false;
-  var _searchQuery = '';
   int minutes;
 
   @override
@@ -35,7 +34,7 @@ class _ConfigPageState extends State<ConfigPage> {
 
   FutureBuilder<int> spinMinutesBefore() {
     return new FutureBuilder<int>(
-      future: retrieveMinutesBeforeFromCache(), // a Future<int> or null
+      future: retrieveMinutesBeforeFromCache(),
       builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
         if (snapshot.hasData) {
           return new TouchSpin(
@@ -43,8 +42,6 @@ class _ConfigPageState extends State<ConfigPage> {
             min: 0,
             max: 60,
             step: 5,
-            // displayFormat:
-            //     NumberFormat.currency(locale: 'en_US', symbol: '\$'),
             textStyle: TextStyle(fontSize: 24),
             iconSize: 36.0,
             addIcon: Icon(Icons.add_circle_outline),
@@ -91,10 +88,10 @@ class _ConfigPageState extends State<ConfigPage> {
                       style: TextStyle(color: Colors.black, fontSize: 18),
                       children: <TextSpan>[
                         TextSpan(
-                            text: 'milyiyo@gmail.com',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black)),
+                          text: 'milyiyo@gmail.com',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.black),
+                        ),
                         TextSpan(text: ''),
                       ],
                     ),
@@ -105,10 +102,10 @@ class _ConfigPageState extends State<ConfigPage> {
                       style: TextStyle(color: Colors.black, fontSize: 18),
                       children: <TextSpan>[
                         TextSpan(
-                            text: 'mtorresm911025@gmail.com',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black)),
+                          text: 'mtorresm911025@gmail.com',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.black),
+                        ),
                         TextSpan(text: ''),
                       ],
                     ),
@@ -201,7 +198,7 @@ class _ConfigPageState extends State<ConfigPage> {
                 children: [
                   Column(
                     children: [
-                      Text('Mostrar posters: ',
+                      Text('Mostrar pósters: ',
                           style: TextStyle(height: 2, fontSize: 18)),
                       Text('(películas)',
                           style: TextStyle(height: 1, fontSize: 14))
@@ -244,20 +241,21 @@ class _ConfigPageState extends State<ConfigPage> {
                 ),
               ),
               GestureDetector(
-                  onTap: () {
-                    _showAboutUsDialog();
-                  },
-                  child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          child: Text(
-                            'Acerca de...',
-                            style: TextStyle(height: 2, fontSize: 18),
-                          ),
-                        )
-                      ]))
+                onTap: () {
+                  _showAboutUsDialog();
+                },
+                child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        child: Text(
+                          'Acerca de...',
+                          style: TextStyle(height: 2, fontSize: 18),
+                        ),
+                      )
+                    ]),
+              )
             ],
           ),
         ),
