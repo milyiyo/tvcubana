@@ -73,59 +73,71 @@ class _ConfigPageState extends State<ConfigPage> {
     return Future.value(true);
   }
 
+  FutureBuilder<String> dialogAboutUs() {
+    return new FutureBuilder<String>(
+      future: _getVersionNumber(), // a Future<int> or null
+      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+        if (snapshot.hasData) {
+          return AlertDialog(
+            title: Text('Acerca de'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text('Esta aplicación ha sido desarrollada por:\n',
+                      style: TextStyle(color: Colors.black, fontSize: 18)),
+                  RichText(
+                    text: TextSpan(
+                      text: ' - Alberto Carmona Barthelemy: ',
+                      style: TextStyle(color: Colors.black, fontSize: 18),
+                      children: <TextSpan>[
+                        TextSpan(
+                            text: 'milyiyo@gmail.com',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black)),
+                        TextSpan(text: ''),
+                      ],
+                    ),
+                  ),
+                  RichText(
+                    text: TextSpan(
+                      text: ' - Marisel Torres Martínez: ',
+                      style: TextStyle(color: Colors.black, fontSize: 18),
+                      children: <TextSpan>[
+                        TextSpan(
+                            text: 'mtorresm911025@gmail.com',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black)),
+                        TextSpan(text: ''),
+                      ],
+                    ),
+                  ),
+                  Text('\nVersión: ${snapshot.data}'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        }
+        return CircularProgressIndicator();
+      },
+    );
+  }
+
   Future<void> _showAboutUsDialog() async {
     return showDialog<void>(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Acerca de'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('Esta aplicación ha sido desarrollada por:\n',
-                    style: TextStyle(color: Colors.black, fontSize: 18)),
-                RichText(
-                  text: TextSpan(
-                    text: ' - Alberto Carmona Barthelemy: ',
-                    style: TextStyle(color: Colors.black, fontSize: 18),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: 'milyiyo@gmail.com',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black)),
-                      TextSpan(text: ''),
-                    ],
-                  ),
-                ),
-                RichText(
-                  text: TextSpan(
-                    text: ' - Marisel Torres Martínez: ',
-                    style: TextStyle(color: Colors.black, fontSize: 18),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: 'mtorresm911025@gmail.com',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black)),
-                      TextSpan(text: ''),
-                    ],
-                  ),
-                ),
-                Text('\nVersión: ${_getVersionNumber()}'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
+        return dialogAboutUs();
       },
     );
   }
@@ -235,19 +247,17 @@ class _ConfigPageState extends State<ConfigPage> {
                   onTap: () {
                     _showAboutUsDialog();
                   },
-                  child: Container(
-                    color: Colors.transparent,
-                    child: Row(
+                  child: Row(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          'Acerca de...',
-                          style: TextStyle(height: 5, fontSize: 18),
-                        ),
-                      ],
-                    ),
-                  ))
+                        Container(
+                          child: Text(
+                            'Acerca de...',
+                            style: TextStyle(height: 2, fontSize: 18),
+                          ),
+                        )
+                      ]))
             ],
           ),
         ),
