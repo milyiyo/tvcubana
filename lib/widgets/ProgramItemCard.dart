@@ -95,7 +95,7 @@ class ProgramItemCard extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: Text(
-                      '${showDate ? programItem.dateStart:''} ${programItem.timeStart} ${channelName == null ? '' : channelName}'),
+                      '${showDate ? programItem.dateStart : ''} ${programItem.timeStart} ${channelName == null ? '' : channelName}'),
                 ),
               ),
               Container(
