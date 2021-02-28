@@ -16,7 +16,7 @@ class CategoriesList extends StatefulWidget {
 }
 
 class _CategoriesListState extends State<CategoriesList> {
-  var movies = new List();
+  var movies = [];
   var isLoading = false;
 
   @override

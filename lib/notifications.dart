@@ -111,7 +111,7 @@ Future<List<Notification>> retrieveNotificationsFromCache() async {
   // print('start:retrieveNotificationsFromCache');
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var notifStr = prefs.getString('notifications');
-  notifications = new List<Notification>();
+  notifications = <Notification>[];
   if (notifStr == null) {
     //TODO: If notifications is the empty list then the next line can be reduced.
     prefs.setString('notifications',

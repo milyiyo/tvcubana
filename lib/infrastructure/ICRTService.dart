@@ -11,7 +11,7 @@ class ICRTService {
   static Future<List<Program>> getProgram(
       Channel channel, bool forceUpdate) async {
     var date = new DateTime.now();
-    var programs = new List<Program>();
+    var programs = <Program>[];
     var lastDayOfWeek = date.add(new Duration(days: 7 - date.weekday));
     var dateStr = getStrDate(lastDayOfWeek);
 
@@ -32,14 +32,14 @@ class ICRTService {
     var weekday = now.weekday;
     var firstDayOfWeek = now.subtract(new Duration(days: weekday - 1));
 
-    var programs = List<Program>();
+    var programs = <Program>[];
     for (var i = 0; i < 7; i++) {
       var date = firstDayOfWeek.add(new Duration(days: i));
       var dateStr = getStrDate(date);
 
       var url =
           'http://eprog2.tvcdigital.cu/programacion/${channel.id}/$dateStr';
-      var result = List<ProgramItem>();
+      var result = <ProgramItem>[];
       // Await the http get response, then decode the json-formatted response.
       var response = await http.get(url);
       if (response.statusCode == 200 &&
@@ -70,7 +70,7 @@ class ICRTService {
   }
 
   static Future<List<Channel>> _getChannelsFromURL() async {
-    var result = new List<Channel>();
+    var result = <Channel>[];
     var url = 'http://eprog2.tvcdigital.cu/canales';
 
     // Await the http get response, then decode the json-formatted response.
@@ -97,7 +97,7 @@ class ICRTService {
     var lastDayOfWeek = date.add(new Duration(days: 7 - date.weekday));
     print(lastDayOfWeek);
     var dateStr = getStrDate(date);
-    var channels = new List<Channel>();
+    var channels = <Channel>[];
 
     bool hasCache = await CacheManager.hasCacheFor(dateStr);
     if (!hasCache || forceUpdate) {

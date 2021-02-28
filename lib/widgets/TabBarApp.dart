@@ -17,7 +17,7 @@ class TabBarApp extends StatefulWidget {
 }
 
 class _TabBarAppState extends State<TabBarApp> {
-  var channels = new List<Channel>();
+  var channels = <Channel>[];
   var isLoading = false;
   var bannerLoaded = false;
   var isSearchActive = false;
