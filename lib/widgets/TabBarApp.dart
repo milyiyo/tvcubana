@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:tvcubana/infrastructure/CacheManager.dart';
 import 'package:tvcubana/models/Channel.dart';
 import 'package:tvcubana/utils.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +21,7 @@ class _TabBarAppState extends State<TabBarApp> {
   var isLoading = false;
   var bannerLoaded = false;
   var isSearchActive = false;
+  var isShowImagesActive = true;
 
   @override
   void initState() {
@@ -114,7 +115,10 @@ class _TabBarAppState extends State<TabBarApp> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => ConfigPage()),
-                  );
+                  ).then((value) => CacheManager.readShowImagesimdb()
+                      .then((value) => setState(() {
+                            isShowImagesActive = value;
+                          })));
                 },
               ),
               // overflow menu

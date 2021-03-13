@@ -8,6 +8,7 @@ import '../infrastructure/CacheManager.dart';
 
 import 'package:lite_rolling_switch/lite_rolling_switch.dart';
 import 'package:flutter_touch_spin/flutter_touch_spin.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class ConfigPage extends StatefulWidget {
   ConfigPage();
@@ -28,6 +29,7 @@ class _ConfigPageState extends State<ConfigPage> {
       setState(() {
         showImages = value;
         hasResult = true;
+        print(['ShowImages', showImages]);
       });
     });
   }
@@ -68,6 +70,18 @@ class _ConfigPageState extends State<ConfigPage> {
     }
     Navigator.of(context).pop(true);
     return Future.value(true);
+  }
+
+  void showToast(bool state) {
+    var message = "Reinicie la aplicación para que se reflejen los cambios";
+    Fluttertoast.showToast(
+        msg: message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 5,
+        backgroundColor: Colors.lightBlue[600],
+        textColor: Colors.white,
+        fontSize: 16.0);
   }
 
   FutureBuilder<String> dialogAboutUs() {
@@ -220,11 +234,13 @@ class _ConfigPageState extends State<ConfigPage> {
                             onChanged: (bool state) {
                               if (hasResult) {
                                 CacheManager.storeShowImages(state);
-                                // context.read<ShowImdbImages>().setShowImdbImages(state);
-                                if (showImages != state)
+                                print(['New value', state]);
+                                if (showImages != state) {
                                   Provider.of<ShowImdbImages>(context,
                                           listen: false)
                                       .setShowImdbImages(state);
+                                  showToast(state);
+                                }
                               }
                             },
                           )

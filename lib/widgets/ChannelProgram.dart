@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:tvcubana/infrastructure/OMDBService.dart';
 import 'package:tvcubana/models/Channel.dart';
 import 'package:tvcubana/models/Program.dart';
 
@@ -88,12 +89,34 @@ class _ChannelProgramState extends State<ChannelProgram> {
                           (pitem) {
                             var shouldPositionTheScroll =
                                 currentProgram == pitem;
-                            return ProgramItemCard(
-                                shouldPositionTheScroll:
-                                    shouldPositionTheScroll,
-                                stickyKey: stickyKey,
-                                programItem: pitem,
-                                iconWidget: getImageForCategory(pitem));
+
+                            var result = new FutureBuilder<Map<String, String>>(
+                                future: OMDBService.getOMDBData(pitem),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<Map<String, String>>
+                                        snapshot) {
+                                  
+                                  if(snapshot.data == {} || snapshot.data == null){
+                                    return ProgramItemCard(
+                                      shouldPositionTheScroll:
+                                          shouldPositionTheScroll,
+                                      stickyKey: stickyKey,
+                                      programItem: pitem,
+                                      iconWidget: getImageForCategory(pitem));
+                                  }
+                                  
+                                  return ProgramItemCard(
+                                      shouldPositionTheScroll:
+                                          shouldPositionTheScroll,
+                                      stickyKey: stickyKey,
+                                      programItem: pitem,
+                                      omdbPoster: snapshot.data['poster'],
+                                      omdbRating: snapshot.data['imdbRating'],
+                                      imdbID: snapshot.data['imdbID'],
+                                      iconWidget: getImageForCategory(pitem));
+                                });
+
+                            return result;
                           },
                         ),
                       ],
@@ -107,14 +130,13 @@ class _ChannelProgramState extends State<ChannelProgram> {
 
   Widget noResultsFound() {
     var image = Image.asset('assets/images/icon_noresults.png');
-    return ListView(shrinkWrap: true,
-        children: <Widget>[
-          image,
-          Text(
-            "No se encontraron resultados",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 20),
-          )
-        ]);
+    return ListView(shrinkWrap: true, children: <Widget>[
+      image,
+      Text(
+        "No se encontraron resultados",
+        textAlign: TextAlign.center,
+        style: TextStyle(fontSize: 20),
+      )
+    ]);
   }
 }

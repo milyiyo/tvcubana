@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:tvcubana/infrastructure/CacheManager.dart';
 import 'package:tvcubana/models/Channel.dart';
 import 'package:tvcubana/models/ProgramItem.dart';
 import 'package:tvcubana/widgets/ProgramItemCard.dart';
@@ -25,10 +26,16 @@ class _ShortAgendaState extends State<ShortAgenda> {
   };
   Timer timer;
   var isLoading = false;
+  bool showPosters = true;
+  final _focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
+
+    _focusNode.addListener(() {
+      print("\nHas focus: ${_focusNode.hasFocus}\n");
+    });
 
     var today = new DateTime.now();
     var todayStr =
@@ -36,15 +43,23 @@ class _ShortAgendaState extends State<ShortAgenda> {
 
     storedData['date'] = todayStr;
     isLoading = true;
-    ICRTService.getChannels(false).then((channels) => getAgendaData(channels, todayStr));
+    CacheManager.readShowImagesimdb().then((value) => setState(() {
+          showPosters = value;
+          print(['Show posters: ', showPosters]);
+        }));
+
+    ICRTService.getChannels(false)
+        .then((channels) => getAgendaData(channels, todayStr));
 
     timer = new Timer.periodic(new Duration(seconds: 60), (Timer t) {
-      ICRTService.getChannels(false).then((channels) => getAgendaData(channels, todayStr));
+      ICRTService.getChannels(false)
+          .then((channels) => getAgendaData(channels, todayStr));
     });
   }
 
   @override
   void dispose() {
+    _focusNode.dispose();
     super.dispose();
     timer.cancel();
   }
@@ -82,13 +97,14 @@ class _ShortAgendaState extends State<ShortAgenda> {
             .forEach((e) {
           for (var item in (e as List)) {
             var pI = item['programItem'];
-            OMDBService.getOMDBData(pI).then((omdb) {
-              if (omdb == {} || !mounted) return;
+            if (showPosters)
+              OMDBService.getOMDBData(pI).then((omdb) {
+                if (omdb == {} || !mounted) return;
 
-              setState(() {
-                item['omdb'] = omdb;
+                setState(() {
+                  item['omdb'] = omdb;
+                });
               });
-            });
           }
         });
       });
@@ -136,6 +152,8 @@ class _ShortAgendaState extends State<ShortAgenda> {
     }).toList();
   }
 
+  
+
   @override
   Widget build(BuildContext context) {
     var channelCurrentProg = storedData['channelCurrentProg'] as List;
@@ -146,10 +164,11 @@ class _ShortAgendaState extends State<ShortAgenda> {
         children: isLoading
             ? [
                 Center(
-                    child: Padding(
-                  padding: const EdgeInsets.only(top: 100.0),
-                  child: CircularProgressIndicator(),
-                ))
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 100.0),
+                    child: CircularProgressIndicator(),
+                  ),
+                )
               ]
             : [
                 headerText('Ahora'),

@@ -142,7 +142,7 @@ Widget getImageForCategory(ProgramItem pitem) {
 
   if (categories.contains('novela')) return getIcon(Icons.dvr);
 
-  print(categories);
+  print(['categories', categories]);
 
   return Icon(Icons.live_tv, size: 50, color: Colors.lightBlue[400]);
 }
