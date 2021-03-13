@@ -75,6 +75,6 @@ class CacheManager {
 
   static Future<bool> readShowImagesimdb() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getBool('showImagesimdb') ?? false;
+    return prefs.getBool('showImagesimdb') ?? true;
   }
 }

@@ -234,7 +234,6 @@ class _ConfigPageState extends State<ConfigPage> {
                             onChanged: (bool state) {
                               if (hasResult) {
                                 CacheManager.storeShowImages(state);
-                                print(['New value', state]);
                                 if (showImages != state) {
                                   Provider.of<ShowImdbImages>(context,
                                           listen: false)
