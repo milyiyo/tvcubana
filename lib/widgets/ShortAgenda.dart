@@ -40,6 +40,12 @@ class _ShortAgendaState extends State<ShortAgenda> {
     var today = new DateTime.now();
     var todayStr =
         '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+    var yesterday = new DateTime.now().subtract(Duration(hours: 24));
+    var yesterdayStr =
+        '${yesterday.year}-${yesterday.month.toString().padLeft(2, '0')}-${yesterday.day.toString().padLeft(2, '0')}';
+    var tomorrow = new DateTime.now().add(Duration(hours: 24));
+    var tomorrowStr =
+        '${tomorrow.year}-${tomorrow.month.toString().padLeft(2, '0')}-${tomorrow.day.toString().padLeft(2, '0')}';
 
     storedData['date'] = todayStr;
     isLoading = true;
@@ -48,12 +54,12 @@ class _ShortAgendaState extends State<ShortAgenda> {
           print(['Show posters: ', showPosters]);
         }));
 
-    ICRTService.getChannels(false)
-        .then((channels) => getAgendaData(channels, todayStr));
+    ICRTService.getChannels(false).then((channels) =>
+        getAgendaData(channels, todayStr, yesterdayStr, tomorrowStr));
 
     timer = new Timer.periodic(new Duration(seconds: 60), (Timer t) {
-      ICRTService.getChannels(false)
-          .then((channels) => getAgendaData(channels, todayStr));
+      ICRTService.getChannels(false).then((channels) =>
+          getAgendaData(channels, todayStr, yesterdayStr, tomorrowStr));
     });
   }
 
@@ -64,18 +70,24 @@ class _ShortAgendaState extends State<ShortAgenda> {
     timer.cancel();
   }
 
-  void getAgendaData(List<Channel> channels, String todayStr) {
+  void getAgendaData(List<Channel> channels, String todayStr,
+      String yesterdayStr, String tomorrowStr) {
     storedData = {'date': '', 'channelCurrentProg': [], 'channelNextProg': []};
 
     for (var i = 0; i < channels.length; i++) {
       var channel = channels[i];
       ICRTService.getProgram(channel, false).then((programs) {
-        var program =
-            programs.firstWhere((p) => p.date == todayStr, orElse: () => null);
-        if (program == null) return;
+        var program = programs
+            .where((p) =>
+                p.date == todayStr ||
+                p.date == yesterdayStr ||
+                p.date == tomorrowStr)
+            .toList();
+        if (program.isEmpty) return;
 
-        program.channelId = channel.id;
-        var currentProgram = getTheCurrentProgram(program.programItems);
+        // program[0].channelId = channel.id;
+        var currentProgram = getTheCurrentAndNextProgram(
+            program[0].programItems + program[1].programItems + program[2].programItems);
         if (currentProgram[0] == null) return;
 
         var curr = {'channel': channel, 'programItem': currentProgram[0]};
@@ -151,8 +163,6 @@ class _ShortAgendaState extends State<ShortAgenda> {
       return result;
     }).toList();
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
