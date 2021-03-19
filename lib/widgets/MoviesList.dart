@@ -1,3 +1,5 @@
+import 'package:provider/provider.dart';
+import 'package:tvcubana/ShowImdbImages.dart';
 import 'package:tvcubana/models/Channel.dart';
 import 'package:tvcubana/models/ProgramItem.dart';
 import 'package:tvcubana/utils.dart';
@@ -14,7 +16,7 @@ class CategoriesList extends StatefulWidget {
 }
 
 class _CategoriesListState extends State<CategoriesList> {
-  var movies = new List();
+  var movies = [];
   var isLoading = false;
 
   @override
@@ -24,7 +26,7 @@ class _CategoriesListState extends State<CategoriesList> {
     chargeList();
   }
 
-  void chargeList() {
+  void chargeList({bool getImdbInfo: true}) {
     movies.clear();
     ICRTService.getChannels(false).then((channels) {
       channels.forEach((channel) {
@@ -55,14 +57,15 @@ class _CategoriesListState extends State<CategoriesList> {
                   isLoading = false;
                 });
 
-                OMDBService.getOMDBData(programItem).then((omdb) {
-                  if (omdb == {}) return;
-                  setState(() {
-                    var idx = movies.indexWhere((element) =>
-                        (element[1] as ProgramItem).id == programItem.id);
-                    if (idx >= 0) movies[idx][2] = omdb;
+                if (getImdbInfo)
+                  OMDBService.getOMDBData(programItem).then((omdb) {
+                    if (omdb == {}) return;
+                    setState(() {
+                      var idx = movies.indexWhere((element) =>
+                          (element[1] as ProgramItem).id == programItem.id);
+                      if (idx >= 0) movies[idx][2] = omdb;
+                    });
                   });
-                });
               }
             });
           });
@@ -114,6 +117,8 @@ class _CategoriesListState extends State<CategoriesList> {
 
   @override
   Widget build(BuildContext context) {
+    var showImdbImages = context.watch<ShowImdbImages>().showImdbImages;
+    print(showImdbImages);
     return Container(
       child: Column(
         children: <Widget>[
@@ -148,7 +153,7 @@ class _CategoriesListState extends State<CategoriesList> {
                         var programItem = (e[1] as ProgramItem);
                         var omdb = (e[2] as Map<String, String>);
 
-                        if (omdb == null)
+                        if (omdb == null || !showImdbImages)
                           return ProgramItemCard(
                               shouldPositionTheScroll: false,
                               stickyKey: null,

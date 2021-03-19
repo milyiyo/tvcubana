@@ -1,6 +1,8 @@
+import 'package:tvcubana/infrastructure/CacheManager.dart';
 import 'package:tvcubana/models/Channel.dart';
 import 'package:tvcubana/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:tvcubana/widgets/ConfigPage.dart';
 import 'package:tvcubana/widgets/SearchPage.dart';
 
 import '../infrastructure/ICRTService.dart';
@@ -15,10 +17,11 @@ class TabBarApp extends StatefulWidget {
 }
 
 class _TabBarAppState extends State<TabBarApp> {
-  var channels = new List<Channel>();
+  var channels = <Channel>[];
   var isLoading = false;
   var bannerLoaded = false;
   var isSearchActive = false;
+  var isShowImagesActive = true;
 
   @override
   void initState() {
@@ -105,6 +108,19 @@ class _TabBarAppState extends State<TabBarApp> {
                     );
                   },
                 ),
+              IconButton(
+                tooltip: 'Configuración',
+                icon: Icon(Icons.settings),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ConfigPage()),
+                  ).then((value) => CacheManager.readShowImagesimdb()
+                      .then((value) => setState(() {
+                            isShowImagesActive = value;
+                          })));
+                },
+              ),
               // overflow menu
             ],
           ),

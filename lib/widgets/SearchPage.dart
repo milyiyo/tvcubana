@@ -16,7 +16,7 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   var _controller = TextEditingController();
   var _searchQuery = '';
-  var _programs = new List();
+  var _programs = [];
 
   @override
   void initState() {

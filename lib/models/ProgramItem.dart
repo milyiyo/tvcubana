@@ -1,3 +1,5 @@
+import '../utils.dart';
+
 class ProgramItem {
   String id;
   String dateEnd;
@@ -49,7 +51,7 @@ class ProgramItem {
         'timeStart': timeStart,
         'timeEnd': timeEnd,
         'title': title,
-        'classification': classification
+        'classification': [getCategory(title + ' ' + description + ' ' + descriptionLong)]
       };
 
   bool isToday() {
@@ -60,45 +62,34 @@ class ProgramItem {
   }
 
   bool isMovie() {
-    var text = this.classification.join(',');
-    return text.contains('Cine') ||
-        text.contains('Pelicula') ||
-        text.contains('filme');
+    return this.classification.contains('filme');
   }
 
   bool isSerie() {
-    var text = this.classification.join(',');
-    return text.contains('Seri');
+    return this.classification.contains('serie');
   }
 
   bool isNews() {
-    var text = this.classification.join(',');
-    return text.contains('Notici') ||
-        text.contains('Telediario') ||
-        text.contains('Revista') ||
-        text.contains('Debate') ||
-        text.contains('Boletin') ||
-        text.contains('Opinión') ||
-        text.contains('Entrevista') ||
-        text.contains('Reportaje') ||
-        text.contains('Emision especial') ||
-        text.contains('Informativo');
+    return this.classification.contains('noticias');
   }
 
   bool isDocumental() {
-    var text = this.classification.join(',');
-    return text.contains('Documental');
+    return this.classification.contains('documental');
   }
 
   bool isSports() {
-    var text = this.classification.join(',');
-    return text.contains('Deport');
+    return this.classification.contains('deporte');
   }
 
   bool isMusic() {
-    var text = this.classification.join(',');
-    return text.contains('Musical') ||
-        text.contains('Concierto') ||
-        text.contains('Espectaculo');
+    return this.classification.contains('musical');
+  }
+
+  bool isChild() {
+    return this.classification.contains('infantiles');
+  }
+
+  bool isHistory() {
+    return this.classification.contains('historia');
   }
 }

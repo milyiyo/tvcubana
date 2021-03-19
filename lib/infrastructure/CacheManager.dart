@@ -11,7 +11,8 @@ class CacheManager {
     prefs.clear();
   }
 
-  static Future<List<Program>> retrievePrograms(String channelId, String dateStr) async {
+  static Future<List<Program>> retrievePrograms(
+      String channelId, String dateStr) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var programsStr = prefs.getString('programs_${channelId}_$dateStr');
     var decodedStr = json.decode(programsStr);
@@ -64,5 +65,16 @@ class CacheManager {
 
     return parsedDate.isBefore(DateTime.parse(cacheDateStr)) ||
         parsedDate == DateTime.parse(cacheDateStr);
+  }
+
+  static void storeShowImages(bool showImagesimdb) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String key = 'showImagesimdb';
+    prefs.setBool(key, showImagesimdb);
+  }
+
+  static Future<bool> readShowImagesimdb() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('showImagesimdb') ?? true;
   }
 }

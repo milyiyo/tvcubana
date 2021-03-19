@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     
     <application
+        android:usesCleartextTraffic="true"
         android:name="io.flutter.app.FlutterApplication"
         android:label="TVCubana"
         android:icon="@mipmap/launcher_icon">
@@ -63,5 +64,9 @@
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-3010271812686729~1473795479"/>
             <!-- android:value="ca-app-pub-3940256099942544~4354546703"/> -->
+
+        <meta-data 
+            android:name="io.flutter.network-policy"
+            android:resource="@xml/network_security_config"/>
     </application>
 </manifest>

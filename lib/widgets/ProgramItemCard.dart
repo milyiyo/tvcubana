@@ -95,7 +95,7 @@ class ProgramItemCard extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: Text(
-                      '${showDate ? programItem.dateStart:''} ${programItem.timeStart} ${channelName == null ? '' : channelName}'),
+                      '${showDate ? programItem.dateStart : ''} ${programItem.timeStart} ${channelName == null ? '' : channelName}'),
                 ),
               ),
               Container(
@@ -136,7 +136,7 @@ class _NotificationButtonState extends State<NotificationButton> {
                 widget.programItem.timeStart)
             .isAfter(DateTime.now())) {
       if (existNotificationForProgram(widget.programItem.id)) {
-        return FlatButton(
+        return TextButton(
           onPressed: () {
             deleteNotification(widget.programItem.id);
             setState(() {});
@@ -146,7 +146,7 @@ class _NotificationButtonState extends State<NotificationButton> {
           ),
         );
       } else {
-        return FlatButton(
+        return TextButton(
           onPressed: () {
             addNotification(
                 widget.programItem.id,
