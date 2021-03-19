@@ -79,7 +79,7 @@ class _ChannelProgramState extends State<ChannelProgram> {
             children: programs.map((p) {
               var currentProgram = (p == null || p.programItems.length == 0)
                   ? null
-                  : getTheCurrentProgram(p.programItems).first;
+                  : getTheCurrentAndNextProgram(p.programItems).first;
               return ListView(
                 controller: scrollController,
                 children: (p == null || p.programItems.length == 0)
