@@ -65,7 +65,7 @@ String getStrDate(DateTime date) {
   return '${date.year}-${date.month.toString().padLeft(2, "0")}-${date.day.toString().padLeft(2, "0")}';
 }
 
-List<ProgramItem> getTheCurrentProgram(List<ProgramItem> pitemsList) {
+List<ProgramItem> getTheCurrentAndNextProgram(List<ProgramItem> pitemsList) {
   List<ProgramItem> result = [null, null];
   for (var i = 0; i < pitemsList.length; i++) {
     var pitem = pitemsList[i];
