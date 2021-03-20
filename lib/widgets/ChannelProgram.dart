@@ -8,6 +8,7 @@ import 'package:tvcubana/models/Program.dart';
 import '../infrastructure/ICRTService.dart';
 import '../utils.dart';
 import 'package:flutter/material.dart';
+import 'package:draggable_floating_button/draggable_floating_button.dart';
 
 import 'ProgramItemCard.dart';
 
@@ -58,12 +59,11 @@ class _ChannelProgramState extends State<ChannelProgram> {
     });
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton.extended(
-        heroTag: 'tag1',
-        onPressed: reloadData,
-        label: Text('Recargar'),
-        icon: Icon(Icons.refresh),
-        backgroundColor: Colors.blue,
+      floatingActionButton: DraggableFloatingActionButton(
+        offset: new Offset(100, 100),
+        child: new Icon(Icons.refresh),
+        onPressed: () => reloadData(),
+        appContext: context,
       ),
       body: DefaultTabController(
         length: datesOfWeek.length,
@@ -95,16 +95,16 @@ class _ChannelProgramState extends State<ChannelProgram> {
                                 builder: (BuildContext context,
                                     AsyncSnapshot<Map<String, String>>
                                         snapshot) {
-                                  
-                                  if(snapshot.data == {} || snapshot.data == null){
+                                  if (snapshot.data == {} ||
+                                      snapshot.data == null) {
                                     return ProgramItemCard(
-                                      shouldPositionTheScroll:
-                                          shouldPositionTheScroll,
-                                      stickyKey: stickyKey,
-                                      programItem: pitem,
-                                      iconWidget: getImageForCategory(pitem));
+                                        shouldPositionTheScroll:
+                                            shouldPositionTheScroll,
+                                        stickyKey: stickyKey,
+                                        programItem: pitem,
+                                        iconWidget: getImageForCategory(pitem));
                                   }
-                                  
+
                                   return ProgramItemCard(
                                       shouldPositionTheScroll:
                                           shouldPositionTheScroll,
@@ -119,6 +119,8 @@ class _ChannelProgramState extends State<ChannelProgram> {
                             return result;
                           },
                         ),
+                        new Container(
+                            margin: EdgeInsets.symmetric(vertical: 40))
                       ],
               );
             }).toList(),

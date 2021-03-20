@@ -4,6 +4,7 @@ import 'package:tvcubana/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:tvcubana/widgets/ConfigPage.dart';
 import 'package:tvcubana/widgets/SearchPage.dart';
+import 'package:draggable_floating_button/draggable_floating_button.dart';
 
 import '../infrastructure/ICRTService.dart';
 import 'ChannelProgram.dart';
@@ -19,7 +20,6 @@ class TabBarApp extends StatefulWidget {
 class _TabBarAppState extends State<TabBarApp> {
   var channels = <Channel>[];
   var isLoading = false;
-  var bannerLoaded = false;
   var isSearchActive = false;
   var isShowImagesActive = true;
 
@@ -124,16 +124,16 @@ class _TabBarAppState extends State<TabBarApp> {
               // overflow menu
             ],
           ),
-          floatingActionButton: Container(
-            margin: EdgeInsets.only(bottom: bannerLoaded ? 40 : 0),
-            child: FloatingActionButton.extended(
+          floatingActionButton: 
+            DraggableFloatingActionButton(
+              // offset: new Offset(100, 100),
+              child: new Icon(
+                Icons.refresh
+              ),
+              onPressed: () => reloadData(),
+              appContext: context,
               heroTag: 'tag2',
-              onPressed: reloadData,
-              label: Text('Recargar'),
-              icon: Icon(Icons.refresh),
-              backgroundColor: Colors.blue,
-            ),
-          ),
+              ),
           body: FutureBuilder<void>(
             builder: (BuildContext context, AsyncSnapshot<void> snapshot) =>
                 TabBarView(
