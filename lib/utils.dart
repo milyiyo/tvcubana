@@ -145,6 +145,7 @@ String getCategory(String value) {
   if(value.toLowerCase().contains("himno apertura") ||
      value.toLowerCase().contains("estocada al tiempo") ||
      value.toLowerCase().contains("la historia") ||
+     value.toLowerCase().contains("ontar la historia") ||
      value.toLowerCase().contains("efemérides") ||
      value.toLowerCase().contains("este dia"))
     return "historia";
@@ -233,6 +234,7 @@ String getCategory(String value) {
      value.toLowerCase().contains("4x4") ||
      value.toLowerCase().contains("video mundo") ||
      value.toLowerCase().contains("videos clip") ||
+     value.toLowerCase().contains("espectacular") ||
      value.toLowerCase().contains("entre claves y corcheas"))
     return "musical";
 
@@ -266,7 +268,30 @@ String getCategory(String value) {
 
   if(value.contains("PROGRAMACIÓN EDUCATIV") || 
      value.contains("PROGRAMACIÓN ARTISTICA EDUCATIVA") || 
-     value.toLowerCase().contains("8vo grado") || 
+     value.toLowerCase().contains("8vo grado") ||  
+     value.toLowerCase().contains("matemática") || 
+     value.toLowerCase().contains("español") || 
+     value.toLowerCase().contains("lengua Esp") ||
+     value.toLowerCase().contains("historia 10mo") ||
+     value.toLowerCase().contains("historia 9no") || 
+     value.toLowerCase().contains("historia 8vo") ||  
+     value.toLowerCase().contains("historia 11no") ||  
+     value.toLowerCase().contains("historia 12mo") ||
+     value.toLowerCase().contains("historia de Cuba") ||
+     value.toLowerCase().contains("inglés") ||
+     value.toLowerCase().contains("cultura pol") ||
+     value.toLowerCase().contains("biología") || 
+     value.toLowerCase().contains("geografía") || 
+     value.toLowerCase().contains("física") || 
+     value.toLowerCase().contains("química") || 
+     value.toLowerCase().contains("ciencias naturales") || 
+     value.toLowerCase().contains("c. naturales") ||
+     value.toLowerCase().contains("formación ciudadana") ||  
+     value.toLowerCase().contains("preparación ciudadana") ||  
+     value.toLowerCase().contains("preparación ciudadana") || 
+     value.toLowerCase().contains("educación especial") ||
+     value.toLowerCase().contains("educación art") || 
+     value.toLowerCase().contains("primera infancia") || 
      value.toLowerCase().contains("nivel elemental") || 
      value.toLowerCase().contains("nivel medio") || 
      value.toLowerCase().contains("grado y especial") || 
@@ -287,6 +312,20 @@ String getCategory(String value) {
      value.toLowerCase().contains("nnd") || 
      value.toLowerCase().contains("glorias deportiv") || 
      value.toLowerCase().contains("voleibol") || 
+     value.toLowerCase().contains("judo") || 
+     value.toLowerCase().contains("beisbol") || 
+     value.toLowerCase().contains("futbol") || 
+     value.toLowerCase().contains("atletismo") || 
+     value.toLowerCase().contains("baloncesto") || 
+     value.toLowerCase().contains("balonmano") || 
+     value.toLowerCase().contains("remo") || 
+     value.toLowerCase().contains("tennis") || 
+     value.toLowerCase().contains("patinaje") || 
+     value.toLowerCase().contains("gimnasia") || 
+     value.toLowerCase().contains("boxeo") || 
+     value.toLowerCase().contains("lucha grecoromana") || 
+     value.toLowerCase().contains("liga española") || 
+     value.toLowerCase().contains("liga del diamante") || 
      value.toLowerCase().contains("programa de ejercicios") ||
      value.toLowerCase().contains("bola viva") ||
      value.toLowerCase().contains("deportes") ||

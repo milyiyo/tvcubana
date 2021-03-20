@@ -92,4 +92,8 @@ class ProgramItem {
   bool isHistory() {
     return this.classification.contains('historia');
   }
+
+  bool isEducation() {
+    return this.classification.contains('educativo');
+  }
 }

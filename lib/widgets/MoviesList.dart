@@ -40,6 +40,8 @@ class _CategoriesListState extends State<CategoriesList> {
                       (programItem.isMusic() && musicIsSeleted()) ||
                       (programItem.isSports() && sportsIsSeleted()) ||
                       (programItem.isNews() && newsIsSeleted()) ||
+                      (programItem.isHistory() && historyIsSeleted()) ||
+                      (programItem.isEducation() && educationIsSeleted()) ||
                       (programItem.isDocumental() && documentalsIsSeleted()))) {
                 setState(() {
                   movies.add([channel, programItem, null]);
@@ -84,11 +86,13 @@ class _CategoriesListState extends State<CategoriesList> {
   ];
   List<String> options = [
     'Películas',
-    'Series',
+    // 'Series',
     'Noticias',
     'Deporte',
+    'Educación',
     'Documentales',
-    'Musicales'
+    'Musicales',
+    'Historia'
   ];
 
   bool moviesIsSeleted() {
@@ -113,6 +117,14 @@ class _CategoriesListState extends State<CategoriesList> {
 
   bool musicIsSeleted() {
     return this.tags.contains('Musicales');
+  }
+
+  bool historyIsSeleted() {
+    return this.tags.contains('Historia');
+  }
+
+  bool educationIsSeleted() {
+    return this.tags.contains('Educación');
   }
 
   @override
