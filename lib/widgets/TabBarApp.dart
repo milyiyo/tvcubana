@@ -124,16 +124,13 @@ class _TabBarAppState extends State<TabBarApp> {
               // overflow menu
             ],
           ),
-          floatingActionButton: 
-            DraggableFloatingActionButton(
-              // offset: new Offset(100, 100),
-              child: new Icon(
-                Icons.refresh
-              ),
-              onPressed: () => reloadData(),
-              appContext: context,
-              heroTag: 'tag2',
-              ),
+          floatingActionButton: DraggableFloatingActionButton(
+            // offset: new Offset(100, 100),
+            child: new Icon(Icons.refresh),
+            onPressed: () => reloadData(),
+            appContext: context,
+            heroTag: 'tag2',
+          ),
           body: FutureBuilder<void>(
             builder: (BuildContext context, AsyncSnapshot<void> snapshot) =>
                 TabBarView(
@@ -179,7 +176,10 @@ class _TabBarAppState extends State<TabBarApp> {
                                           ),
                                           subtitle: Text('${e.description}.'),
                                         ),
-                                        getImageForChannel(e.name, 100),
+                                        Flexible(
+                                          child:
+                                              getImageForChannel(e.name, 100),
+                                        ),
                                       ],
                                     ),
                                   ),
