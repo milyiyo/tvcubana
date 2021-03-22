@@ -50,7 +50,7 @@ Future<int> retrieveMinutesBeforeFromCache() async {
     //by default minutesBefore for Notifications is 10
     prefs.setInt('minutesBefore', 10);
     minutesBefore = 10;
-  } 
+  }
   return minutesBefore;
 }
 
@@ -71,7 +71,9 @@ void addNotification(String programItemId, String dateStart, String timeStart,
   int minutesBefore = await retrieveMinutesBeforeFromCache();
 
   var chanName = channelName == null ? '' : 'Por ' + channelName;
-    var textMinutes = minutesBefore == 0 ? ' ahora!' : ' en ' + minutesBefore.toString() + ' minutos.';
+  var textMinutes = minutesBefore == 0
+      ? ' ahora!'
+      : ' en ' + minutesBefore.toString() + ' minutos.';
   scheduleNotification(id, DateTime.parse('$dateStart $timeStart'),
       programTitle, chanName + textMinutes);
 }
@@ -136,7 +138,7 @@ Future<void> initializeNotifications() async {
       new AndroidInitializationSettings('icon_notif');
 
   var initializationSettings =
-      InitializationSettings(initializationSettingsAndroid, null);
+      InitializationSettings(android : initializationSettingsAndroid);
 
   flutterLocalNotificationsPlugin.initialize(initializationSettings,
       onSelectNotification: (payload) => null);
@@ -152,8 +154,8 @@ Future<void> scheduleNotification(
 
   var androidPlatformChannelSpecifics = AndroidNotificationDetails(
       'channel_id_TVCubana', 'channel_TVCubana', 'channel_TVCubana_description',
-      importance: Importance.Max,
-      priority: Priority.High,
+      importance: Importance.max,
+      priority: Priority.high,
       vibrationPattern: vibrationPattern,
       enableLights: true,
       enableVibration: true,
@@ -165,16 +167,19 @@ Future<void> scheduleNotification(
       ledOffMs: 500);
 
   var platformChannelSpecifics =
-      NotificationDetails(androidPlatformChannelSpecifics, null);
+      NotificationDetails(android : androidPlatformChannelSpecifics);
 
   int minutesBefore = await retrieveMinutesBeforeFromCache();
   var scheduledNotificationDateTime =
       dateTime.subtract(new Duration(minutes: minutesBefore));
 
   flutterLocalNotificationsPlugin
-      .schedule(id, title, body, scheduledNotificationDateTime,
+      .zonedSchedule(id, title, body, scheduledNotificationDateTime,
           platformChannelSpecifics,
-          androidAllowWhileIdle: true, payload: 'item')
+          androidAllowWhileIdle: true,
+          payload: 'item',
+          uiLocalNotificationDateInterpretation:
+                      UILocalNotificationDateInterpretation.absoluteTime)
       .then((value) => print('Notification executed'))
       .catchError((err) => print('Error ' + err));
 
@@ -197,11 +202,10 @@ void reScheduleNotifications(int minsBefore) async {
   notifications.map((e) {
     print('re-scheduling ' + e.programTitle);
     var chanName = e.channelName == null ? '' : 'Por ' + e.channelName;
-    var textMinutes = minsBefore == 0 ? ' ahora!' : ' en ' + minsBefore.toString() + ' minutos.';
-    scheduleNotification(
-        e.id,
-        DateTime.parse('${e.dateStart} ${e.timeStart}'),
-        e.programTitle,
-        chanName + textMinutes);
+    var textMinutes = minsBefore == 0
+        ? ' ahora!'
+        : ' en ' + minsBefore.toString() + ' minutos.';
+    scheduleNotification(e.id, DateTime.parse('${e.dateStart} ${e.timeStart}'),
+        e.programTitle, chanName + textMinutes);
   });
 }
