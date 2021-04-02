@@ -9,16 +9,16 @@ import '../infrastructure/ICRTService.dart';
 import '../infrastructure/OMDBService.dart';
 import '../utils.dart';
 
-class ShortAgenda extends StatefulWidget {
-  const ShortAgenda({
+class TabShortAgenda extends StatefulWidget {
+  const TabShortAgenda({
     Key key,
   }) : super(key: key);
 
   @override
-  _ShortAgendaState createState() => _ShortAgendaState();
+  _TabShortAgendaState createState() => _TabShortAgendaState();
 }
 
-class _ShortAgendaState extends State<ShortAgenda> {
+class _TabShortAgendaState extends State<TabShortAgenda> {
   var storedData = {
     'date': '',
     'channelCurrentProg': [],
@@ -86,8 +86,14 @@ class _ShortAgendaState extends State<ShortAgenda> {
         if (program.isEmpty) return;
 
         // program[0].channelId = channel.id;
-        var currentProgram = getTheCurrentAndNextProgram(
-            program[0].programItems + program[1].programItems + program[2].programItems);
+        var list = <ProgramItem>[];
+        for (var item in program) {
+          list.addAll(item.programItems);
+        }
+        var currentProgram = getTheCurrentAndNextProgram(list);
+
+        // var currentProgram = getTheCurrentAndNextProgram(
+        //     program[0].programItems + program[1].programItems + program[2].programItems);
         if (currentProgram[0] == null) return;
 
         var curr = {'channel': channel, 'programItem': currentProgram[0]};

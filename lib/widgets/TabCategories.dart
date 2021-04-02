@@ -10,12 +10,12 @@ import '../infrastructure/ICRTService.dart';
 import '../infrastructure/OMDBService.dart';
 import 'ProgramItemCard.dart';
 
-class CategoriesList extends StatefulWidget {
+class TabCategories extends StatefulWidget {
   @override
-  _CategoriesListState createState() => _CategoriesListState();
+  _TabCategoriesState createState() => _TabCategoriesState();
 }
 
-class _CategoriesListState extends State<CategoriesList> {
+class _TabCategoriesState extends State<TabCategories> {
   var movies = [];
   var isLoading = false;
 

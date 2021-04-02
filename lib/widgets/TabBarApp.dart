@@ -9,8 +9,8 @@ import 'package:draggable_floating_button/draggable_floating_button.dart';
 import '../infrastructure/ICRTService.dart';
 import 'ChannelProgram.dart';
 import 'ImdbPage.dart';
-import 'MoviesList.dart';
-import 'ShortAgenda.dart';
+import 'TabCategories.dart';
+import 'TabShortAgenda.dart';
 
 class TabBarApp extends StatefulWidget {
   @override
@@ -35,6 +35,13 @@ class _TabBarAppState extends State<TabBarApp> {
           isLoading = false;
         });
       }
+    }).onError((error, stackTrace) {
+      print(error);
+      print(stackTrace);
+      
+      setState(() {
+        isLoading = false;
+      });
     });
   }
 
@@ -135,8 +142,8 @@ class _TabBarAppState extends State<TabBarApp> {
             builder: (BuildContext context, AsyncSnapshot<void> snapshot) =>
                 TabBarView(
               children: [
-                ShortAgenda(),
-                CategoriesList(),
+                TabShortAgenda(),
+                TabCategories(),
                 isLoading
                     ? Center(
                         child: Padding(
