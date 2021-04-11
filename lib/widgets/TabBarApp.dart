@@ -38,7 +38,7 @@ class _TabBarAppState extends State<TabBarApp> {
     }).onError((error, stackTrace) {
       print(error);
       print(stackTrace);
-      
+
       setState(() {
         isLoading = false;
       });
@@ -131,12 +131,17 @@ class _TabBarAppState extends State<TabBarApp> {
               // overflow menu
             ],
           ),
-          floatingActionButton: DraggableFloatingActionButton(
-            // offset: new Offset(100, 100),
-            child: new Icon(Icons.refresh),
-            onPressed: () => reloadData(),
-            appContext: context,
-            heroTag: 'tag2',
+          floatingActionButton: Stack(
+            children: <Widget>[
+              DraggableFloatingActionButton(
+                backgroundColor: Theme.of(context).accentColor,
+                child: new Icon(Icons.refresh),
+                onPressed: () => reloadData(),
+                appContext: context,
+                offset: new Offset(MediaQuery.of(context).size.width - 80,
+                    MediaQuery.of(context).size.height - 80),
+              )
+            ],
           ),
           body: FutureBuilder<void>(
             builder: (BuildContext context, AsyncSnapshot<void> snapshot) =>

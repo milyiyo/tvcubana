@@ -59,11 +59,17 @@ class _ChannelProgramState extends State<ChannelProgram> {
     });
 
     return Scaffold(
-      floatingActionButton: DraggableFloatingActionButton(
-        offset: new Offset(100, 100),
-        child: new Icon(Icons.refresh),
-        onPressed: () => reloadData(),
-        appContext: context,
+      floatingActionButton: Stack(
+        children: <Widget>[
+          DraggableFloatingActionButton(
+            backgroundColor: Theme.of(context).accentColor,
+            child: new Icon(Icons.refresh),
+            onPressed: () => reloadData(),
+            appContext: context,
+            offset: new Offset(MediaQuery.of(context).size.width - 80,
+                MediaQuery.of(context).size.height - 80),
+          )
+        ],
       ),
       body: DefaultTabController(
         length: datesOfWeek.length,
