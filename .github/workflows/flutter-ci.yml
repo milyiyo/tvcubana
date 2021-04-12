@@ -25,11 +25,6 @@ jobs:
       with:
         channel: 'stable' # 'dev', 'alpha', default to: 'stable'
         # flutter-version: '1.12.x' # you can also specify exact version of flutter
-    
-    - run: echo ${GOOGLE_SERVICE} > google-services.json
-    - run: cat google-services.json
-    - run: mv google-services.json android/app/
-    - run: cat android/app/google-services.json
 
     # Get flutter dependencies.
     - run: flutter pub get
