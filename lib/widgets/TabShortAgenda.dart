@@ -90,7 +90,7 @@ class _TabShortAgendaState extends State<TabShortAgenda> {
         for (var item in program) {
           list.addAll(item.programItems);
         }
-        var currentProgram = getTheCurrentAndNextProgram(list);
+        var currentProgram = getTheCurrentAndNextProgram(list, DateTime.now());
 
         // var currentProgram = getTheCurrentAndNextProgram(
         //     program[0].programItems + program[1].programItems + program[2].programItems);

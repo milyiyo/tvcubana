@@ -65,20 +65,19 @@ String getStrDate(DateTime date) {
   return '${date.year}-${date.month.toString().padLeft(2, "0")}-${date.day.toString().padLeft(2, "0")}';
 }
 
-List<ProgramItem> getTheCurrentAndNextProgram(List<ProgramItem> pitemsList) {
+List<ProgramItem> getTheCurrentAndNextProgram(
+    List<ProgramItem> pitemsList, DateTime now) {
   List<ProgramItem> result = [null, null];
   for (var i = 0; i < pitemsList.length; i++) {
     var pitem = pitemsList[i];
-
-    var now = new DateTime.now();
     var dateStartProg = DateTime.parse(pitem.dateStart +
         ' ' +
-        pitem.timeStart +
-        (pitem.timeStart.length == 8 ? '' : '0'));
+        (pitem.timeStart.length == 5
+            ? pitem.timeStart + ':00'
+            : pitem.timeStart));
     var dateEndProg = DateTime.parse(pitem.dateEnd +
         ' ' +
-        pitem.timeEnd +
-        (pitem.timeEnd.length == 8 ? '' : '0'));
+        (pitem.timeEnd.length == 5 ? pitem.timeEnd + ':00' : pitem.timeEnd));
 
     if ((dateStartProg.isBefore(now) && dateEndProg.isAfter(now)) ||
         dateStartProg == now ||
