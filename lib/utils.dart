@@ -2,18 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'models/ProgramItem.dart';
 
-var sportNames = [
-  r"\b[e-é]isbol",
-  r"\f[u-ú]tbol",
-  'basket',
-  'baloncesto',
-  'boxeo',
-  r'\nataci[o-ó]n',
-  'judo',
-  'taekwondo',
-  'lucha'
-];
-
 Map<String, String> getChannelImages() {
   Map<String, String> images = new Map<String, String>();
 
