@@ -55,10 +55,7 @@ class CacheManager {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var cacheDateStr = prefs.getString('date');
     var cacheChannelStr = prefs.getString('channels');
-    if (cacheDateStr == null) {
-      return false;
-    }
-    if (cacheDateStr == null && cacheChannelStr != null) {
+    if (cacheDateStr == null || cacheChannelStr == null) {
       return false;
     }
     var parsedDate = DateTime.parse(dateStr);
