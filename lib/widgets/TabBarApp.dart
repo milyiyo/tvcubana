@@ -50,7 +50,9 @@ class _TabBarAppState extends State<TabBarApp> {
       isLoading = true;
     });
 
-    ICRTService.getChannels(true).then((channels) {
+    ICRTService.getChannels(true).then((freshChannels) {
+      channels =
+          freshChannels.where((element) => element.name != null).toList();
       for (var i = 0; i < channels.length; i++) {
         ICRTService.getProgram(channels[i], true).then((programs) {
           if (i == channels.length - 1)
