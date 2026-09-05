@@ -78,14 +78,16 @@ void addNotification(String programItemId, String dateStart, String timeStart,
       programTitle, chanName + textMinutes);
 }
 
-void deleteNotification(String programItemId) async {
+Future<void> deleteNotification(String programItemId) async {
   notifications = await retrieveNotificationsFromCache();
-  int idNotif =
-      notifications.indexWhere((notif) => notif.programItemId == programItemId);
+  Notification target = notifications
+      .firstWhere((n) => n.programItemId == programItemId, orElse: () => null);
   notifications.removeWhere((notif) => notif.programItemId == programItemId);
   storeNotificationsInCache(notifications);
 
-  removeSchedNotification(idNotif);
+  if (target != null) {
+    removeSchedNotification(target.id);
+  }
 }
 
 void deleteOldNotifications() async {
