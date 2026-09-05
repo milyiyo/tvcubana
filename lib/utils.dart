@@ -59,14 +59,8 @@ List<ProgramItem> getTheCurrentAndNextProgram(List<ProgramItem> pitemsList) {
     var pitem = pitemsList[i];
 
     var now = new DateTime.now();
-    var dateStartProg = DateTime.parse(pitem.dateStart +
-        ' ' +
-        pitem.timeStart +
-        (pitem.timeStart.length == 8 ? '' : '0'));
-    var dateEndProg = DateTime.parse(pitem.dateEnd +
-        ' ' +
-        pitem.timeEnd +
-        (pitem.timeEnd.length == 8 ? '' : '0'));
+    var dateStartProg = DateTime.parse('${pitem.dateStart} ${pitem.timeStart}');
+    var dateEndProg = DateTime.parse('${pitem.dateEnd} ${pitem.timeEnd}');
 
     if ((dateStartProg.isBefore(now) && dateEndProg.isAfter(now)) ||
         dateStartProg == now ||
