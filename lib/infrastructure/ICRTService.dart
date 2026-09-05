@@ -46,13 +46,12 @@ class ICRTService {
           !response.body.startsWith('{"solapamiento":{"eventos_solapados"')) {
         var jsonResponse = convert.jsonDecode(response.body);
         for (var pjson in jsonResponse) {
-          
           // print([pjson['titulo'], pjson['descripcion'], pjson['descripcion_ampliada']]
           //   .join(' ')
           //   .replaceAll('\n', ' ')
           //   .replaceAll(',', ' ')
           //   .replaceAll(';', ' '));
-          
+
           result.add(new ProgramItem(
               pjson['_id'],
               pjson['descripcion'],
@@ -63,10 +62,10 @@ class ICRTService {
               pjson['fecha_final'],
               pjson['hora_inicio'],
               pjson['hora_fin'],
-              pjson['titulo'],
-              (pjson['clasific'] as List)
-                  .map((e) => e['clasificacion'].toString().trim())
-                  .toList()));
+              pjson['titulo'], [
+            getCategory(
+                '${pjson['titulo']} ${pjson['descripcion']} ${pjson['descripcion_ampliada']}')
+          ]));
         }
       } else {
         print('Request failed with status: ${response.statusCode}.');
