@@ -5,6 +5,7 @@ import 'dart:ui';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class Notification {
   int id;
@@ -138,7 +139,7 @@ Future<void> initializeNotifications() async {
       new AndroidInitializationSettings('icon_notif');
 
   var initializationSettings =
-      InitializationSettings(android : initializationSettingsAndroid);
+      InitializationSettings(android: initializationSettingsAndroid);
 
   flutterLocalNotificationsPlugin.initialize(initializationSettings,
       onSelectNotification: (payload) => null);
@@ -167,19 +168,23 @@ Future<void> scheduleNotification(
       ledOffMs: 500);
 
   var platformChannelSpecifics =
-      NotificationDetails(android : androidPlatformChannelSpecifics);
+      NotificationDetails(android: androidPlatformChannelSpecifics);
 
   int minutesBefore = await retrieveMinutesBeforeFromCache();
   var scheduledNotificationDateTime =
       dateTime.subtract(new Duration(minutes: minutesBefore));
 
   flutterLocalNotificationsPlugin
-      .zonedSchedule(id, title, body, scheduledNotificationDateTime,
+      .zonedSchedule(
+          id,
+          title,
+          body,
+          tz.TZDateTime.from(scheduledNotificationDateTime, tz.UTC),
           platformChannelSpecifics,
           androidAllowWhileIdle: true,
           payload: 'item',
           uiLocalNotificationDateInterpretation:
-                      UILocalNotificationDateInterpretation.absoluteTime)
+              UILocalNotificationDateInterpretation.absoluteTime)
       .then((value) => print('Notification executed'))
       .catchError((err) => print('Error ' + err));
 
@@ -198,8 +203,10 @@ void reScheduleNotifications(int minsBefore) async {
   print('re-scheduling notifications...');
   // storeMinutesBefore(minsBefore);
   notifications = await retrieveNotificationsFromCache();
-  notifications.map((e) => removeSchedNotification(e.id));
-  notifications.map((e) {
+  for (var e in notifications) {
+    removeSchedNotification(e.id);
+  }
+  for (var e in notifications) {
     print('re-scheduling ' + e.programTitle);
     var chanName = e.channelName == null ? '' : 'Por ' + e.channelName;
     var textMinutes = minsBefore == 0
@@ -207,5 +214,5 @@ void reScheduleNotifications(int minsBefore) async {
         : ' en ' + minsBefore.toString() + ' minutos.';
     scheduleNotification(e.id, DateTime.parse('${e.dateStart} ${e.timeStart}'),
         e.programTitle, chanName + textMinutes);
-  });
+  }
 }
