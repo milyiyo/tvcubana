@@ -28,7 +28,14 @@ class _TabCategoriesState extends State<TabCategories> {
 
   void chargeList({bool getImdbInfo: true}) {
     movies.clear();
+    setState(() => isLoading = true);
     ICRTService.getChannels(false).then((channels) {
+      if (!mounted) return;
+      if (channels.isEmpty) {
+        setState(() => isLoading = false);
+        return;
+      }
+      var pending = channels.length;
       channels.forEach((channel) {
         ICRTService.getProgram(channel, false).then((programs) {
           programs.forEach((program) {
@@ -56,7 +63,6 @@ class _TabCategoriesState extends State<TabCategories> {
 
                     return date0.compareTo(date1);
                   });
-                  isLoading = false;
                 });
 
                 if (getImdbInfo)
@@ -71,6 +77,10 @@ class _TabCategoriesState extends State<TabCategories> {
               }
             });
           });
+        }).whenComplete(() {
+          if (--pending == 0 && mounted) {
+            setState(() => isLoading = false);
+          }
         });
       });
     });
