@@ -26,7 +26,7 @@ class _TabCategoriesState extends State<TabCategories> {
     chargeList();
   }
 
-  void chargeList({bool getImdbInfo: true}) {
+  void chargeList() {
     movies.clear();
     ICRTService.getChannels(false).then((channels) {
       channels.forEach((channel) {
@@ -59,15 +59,14 @@ class _TabCategoriesState extends State<TabCategories> {
                   isLoading = false;
                 });
 
-                if (getImdbInfo)
-                  OMDBService.getOMDBData(programItem).then((omdb) {
-                    if (omdb == {}) return;
-                    setState(() {
-                      var idx = movies.indexWhere((element) =>
-                          (element[1] as ProgramItem).id == programItem.id);
-                      if (idx >= 0) movies[idx][2] = omdb;
-                    });
+                OMDBService.getOMDBData(programItem).then((omdb) {
+                  if (omdb == {}) return;
+                  setState(() {
+                    var idx = movies.indexWhere((element) =>
+                        (element[1] as ProgramItem).id == programItem.id);
+                    if (idx >= 0) movies[idx][2] = omdb;
                   });
+                });
               }
             });
           });
